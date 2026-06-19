@@ -1,0 +1,141 @@
+@if (loading()) {
+  <app-loading-spinner />
+} @else if (error()) {
+  <div class="container">
+    <app-empty-state [message]="error()!" icon="⚠️" />
+  </div>
+} @else if (app()) {
+  <section class="container app-detail">
+    <header class="app-detail__header">
+      <div class="app-detail__icon">
+        @if (app()!.icon_url) {
+          <img [src]="app()!.icon_url" [alt]="app()!.app_name" />
+        } @else {
+          <span>{{ app()!.app_name.charAt(0) }}</span>
+        }
+      </div>
+      <div class="app-detail__info">
+        @if (app()!.is_featured) {
+          <span class="app-detail__badge">Sponsorisé</span>
+        }
+        <h1>{{ app()!.app_name }}</h1>
+        @if (app()!.tagline) {
+          <p class="app-detail__tagline">{{ app()!.tagline }}</p>
+        }
+        <div class="app-detail__meta">
+          @if (app()!.category?.name) {
+            <span>{{ app()!.category?.name }}</span>
+          }
+          <span>★ {{ app()!.rating }}</span>
+          <span>{{ app()!.downloads }} téléchargements</span>
+        </div>
+        <div class="app-detail__actions">
+          @if (app()!.download_link) {
+            <a [href]="app()!.download_link!" target="_blank" rel="noopener" class="btn btn--primary">Télécharger</a>
+          }
+          @if (app()!.live_demo) {
+            <a [href]="app()!.live_demo!" target="_blank" rel="noopener" class="btn btn--secondary">Démo en ligne</a>
+          }
+          <button type="button" class="btn btn--outline" (click)="share()">
+            {{ copied() ? 'Lien copié !' : 'Partager' }}
+          </button>
+        </div>
+      </div>
+    </header>
+
+    @if (app()!.screenshots?.length) {
+      <section class="app-detail__gallery">
+        @if (activeScreenshot()) {
+          <img
+            class="app-detail__gallery-main"
+            [src]="activeScreenshot()!"
+            alt="Capture d'écran"
+            (click)="openLightbox(app()!.screenshots!.indexOf(activeScreenshot()!))"
+          />
+        }
+        <div class="app-detail__gallery-thumbs">
+          @for (shot of app()!.screenshots; track shot; let i = $index) {
+            <img
+              [src]="shot"
+              alt="Capture d'écran"
+              [class.active]="shot === activeScreenshot()"
+              (click)="selectScreenshot(shot); openLightbox(i)"
+            />
+          }
+        </div>
+      </section>
+    }
+
+    @if (lightboxIndex() !== null && app()!.screenshots) {
+      <div class="lightbox" (click)="closeLightbox()" (keydown)="onLightboxKeydown($event)" tabindex="0">
+        <button type="button" class="lightbox__close" (click)="closeLightbox()" aria-label="Fermer">✕</button>
+        <button type="button" class="lightbox__arrow lightbox__arrow--left" (click)="$event.stopPropagation(); prevScreenshot()" aria-label="Précédent">‹</button>
+        <img
+          class="lightbox__image"
+          [src]="app()!.screenshots![lightboxIndex()!]"
+          alt="Capture d'écran"
+          (click)="$event.stopPropagation()"
+        />
+        <button type="button" class="lightbox__arrow lightbox__arrow--right" (click)="$event.stopPropagation(); nextScreenshot()" aria-label="Suivant">›</button>
+        <span class="lightbox__counter">{{ lightboxIndex()! + 1 }} / {{ app()!.screenshots!.length }}</span>
+      </div>
+    }
+
+    <section class="app-detail__section">
+      <h2>Description</h2>
+      <p>{{ app()!.description }}</p>
+      @if (app()!.detailed_description) {
+        <p>{{ app()!.detailed_description }}</p>
+      }
+    </section>
+
+    @if (app()!.key_features?.length) {
+      <section class="app-detail__section">
+        <h2>Fonctionnalités clés</h2>
+        <ul>
+          @for (feature of app()!.key_features; track feature) {
+            <li>{{ feature }}</li>
+          }
+        </ul>
+      </section>
+    }
+
+    <section class="app-detail__section app-detail__grid">
+      @if (app()!.pricing_model) {
+        <div>
+          <h3>Tarification</h3>
+          <p>{{ app()!.pricing_model }} @if (app()!.pricing) { — {{ app()!.pricing }} }</p>
+        </div>
+      }
+      @if (app()!.support_options?.length) {
+        <div>
+          <h3>Support</h3>
+          <p>{{ app()!.support_options?.join(', ') }}</p>
+        </div>
+      }
+      @if (app()!.languages?.length) {
+        <div>
+          <h3>Langues</h3>
+          <p>{{ app()!.languages?.join(', ') }}</p>
+        </div>
+      }
+    </section>
+
+    @if (app()!.user) {
+      <section class="app-detail__developer">
+        <h2>Développeur</h2>
+        <div class="app-detail__developer-card">
+          @if (app()!.user?.avatar_url) {
+            <img [src]="app()!.user?.avatar_url" alt="" class="app-detail__developer-avatar" />
+          }
+          <div>
+            <strong>{{ app()!.user?.name }}</strong>
+            @if (app()!.user?.company_name) {
+              <p>{{ app()!.user?.company_name }}</p>
+            }
+          </div>
+        </div>
+      </section>
+    }
+  </section>
+}

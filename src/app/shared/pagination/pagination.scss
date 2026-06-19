@@ -1,0 +1,29 @@
+@use '../../shared-styles/variables' as *;
+
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 24px;
+
+  &__btn {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background-color: $color-white;
+    color: $color-text;
+    padding: 8px 14px;
+    border-radius: $radius;
+    font-weight: 500;
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    &--active {
+      background-color: $color-primary;
+      color: $color-white;
+      border-color: $color-primary;
+    }
+  }
+}

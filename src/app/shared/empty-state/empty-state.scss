@@ -1,0 +1,20 @@
+@use '../../shared-styles/variables' as *;
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 48px 16px;
+  color: $color-text-muted;
+
+  &__icon {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+  }
+
+  &__message {
+    margin: 0;
+    font-size: 1rem;
+  }
+}

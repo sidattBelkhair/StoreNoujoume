@@ -1,0 +1,243 @@
+@if (loadingApp()) {
+  <app-loading-spinner />
+} @else {
+  <section class="container publish">
+    <h1>Publier mon application</h1>
+
+    <div class="publish__progress">
+      @for (step of [1, 2, 3, 4]; track step) {
+        <div
+          class="publish__step"
+          [class.publish__step--active]="step === currentStep()"
+          [class.publish__step--done]="step < currentStep()"
+          (click)="goToStep(step)"
+        >
+          <span class="publish__step-number">{{ step }}</span>
+          <span class="publish__step-label">
+            @switch (step) {
+              @case (1) { Informations de base }
+              @case (2) { Détails techniques }
+              @case (3) { Tarification }
+              @case (4) { Détails commerciaux }
+            }
+          </span>
+        </div>
+      }
+    </div>
+
+    @if (errorMessage()) {
+      <p class="publish__error">{{ errorMessage() }}</p>
+    }
+    @if (stepError()) {
+      <p class="publish__error">{{ stepError() }}</p>
+    }
+
+    <form class="publish__form" (ngSubmit)="currentStep() === totalSteps ? submit() : next()">
+
+      @if (currentStep() === 1) {
+        <div class="publish__fields">
+          <label>
+            Nom de l'application *
+            <input type="text" [(ngModel)]="appName" name="appName" required />
+          </label>
+
+          <label>
+            Tagline
+            <input type="text" [(ngModel)]="tagline" name="tagline" />
+          </label>
+
+          <label>
+            Description courte *
+            <textarea [(ngModel)]="description" name="description" rows="3" required></textarea>
+          </label>
+
+          <label>
+            Catégorie *
+            <select [(ngModel)]="categoryId" name="categoryId" required>
+              <option [ngValue]="null">Choisir une catégorie</option>
+              @for (category of categories(); track category.id) {
+                <option [ngValue]="category.id">{{ category.name }}</option>
+              }
+            </select>
+          </label>
+
+          <label>
+            Public cible
+            <select [(ngModel)]="targetAudience" name="targetAudience">
+              <option value="">Choisir</option>
+              @for (audience of targetAudiences; track audience) {
+                <option [value]="audience">{{ audience }}</option>
+              }
+            </select>
+          </label>
+
+          <label>
+            Sous-catégorie
+            <input type="text" [(ngModel)]="subcategory" name="subcategory" />
+          </label>
+
+          <label>
+            Tags (séparés par des virgules)
+            <input type="text" [(ngModel)]="tagsInput" name="tagsInput" />
+          </label>
+
+          <label>
+            Icône de l'application
+            <input type="file" accept="image/*" (change)="onIconSelected($event)" />
+          </label>
+          @if (uploadingIcon()) {
+            <app-loading-spinner />
+          }
+          @if (iconUrl) {
+            <img [src]="iconUrl" alt="Icône" class="publish__preview-icon" />
+          }
+
+          <label>
+            Captures d'écran
+            <input type="file" accept="image/*" multiple (change)="onScreenshotsSelected($event)" />
+          </label>
+          @if (uploadingScreenshots()) {
+            <app-loading-spinner />
+          }
+          @if (screenshots.length) {
+            <div class="publish__screenshots">
+              @for (shot of screenshots; track shot) {
+                <div class="publish__screenshot">
+                  <img [src]="shot" alt="Capture" />
+                  <button type="button" (click)="removeScreenshot(shot)">×</button>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+
+      @if (currentStep() === 2) {
+        <div class="publish__fields">
+          <label>
+            Type d'application
+            <select [(ngModel)]="appType" name="appType">
+              <option value="">Choisir</option>
+              @for (type of appTypes; track type) {
+                <option [value]="type">{{ type }}</option>
+              }
+            </select>
+          </label>
+
+          <fieldset>
+            <legend>Plateformes supportées</legend>
+            @for (platform of platforms; track platform) {
+              <label class="publish__checkbox">
+                <input
+                  type="checkbox"
+                  [checked]="supportedPlatforms.includes(platform)"
+                  (change)="togglePlatform(platform)"
+                />
+                {{ platform }}
+              </label>
+            }
+          </fieldset>
+
+          <label>
+            Version actuelle
+            <input type="text" [(ngModel)]="currentVersion" name="currentVersion" />
+          </label>
+
+          <label>
+            Exigences techniques
+            <textarea [(ngModel)]="technicalRequirements" name="technicalRequirements" rows="3"></textarea>
+          </label>
+        </div>
+      }
+
+      @if (currentStep() === 3) {
+        <div class="publish__fields">
+          <label>
+            Modèle de tarification *
+            <select [(ngModel)]="pricingModel" name="pricingModel" required>
+              <option value="">Choisir</option>
+              <option value="free">Gratuit</option>
+              <option value="paid">Payant</option>
+              <option value="freemium">Freemium</option>
+            </select>
+          </label>
+
+          <label>
+            Prix
+            <input type="text" [(ngModel)]="pricing" name="pricing" placeholder="ex: 500 MRU / mois" />
+          </label>
+
+          <label class="publish__checkbox">
+            <input type="checkbox" [(ngModel)]="hasFreeTrial" name="hasFreeTrial" />
+            Essai gratuit disponible
+          </label>
+
+          @if (hasFreeTrial) {
+            <label>
+              Nombre de jours d'essai
+              <input type="number" [(ngModel)]="trialDays" name="trialDays" min="1" />
+            </label>
+          }
+        </div>
+      }
+
+      @if (currentStep() === 4) {
+        <div class="publish__fields">
+          <label>
+            Valeur commerciale
+            <textarea [(ngModel)]="businessValue" name="businessValue" rows="3"></textarea>
+          </label>
+
+          <label>
+            Fonctionnalités clés (une par ligne)
+            <textarea [(ngModel)]="keyFeaturesInput" name="keyFeaturesInput" rows="4"></textarea>
+          </label>
+
+          <fieldset>
+            <legend>Secteurs d'activité</legend>
+            @for (sector of businessSectors; track sector) {
+              <label class="publish__checkbox">
+                <input
+                  type="checkbox"
+                  [checked]="selectedBusinessSectors.includes(sector)"
+                  (change)="toggleSector(sector)"
+                />
+                {{ sector }}
+              </label>
+            }
+          </fieldset>
+
+          <fieldset>
+            <legend>Options de support</legend>
+            @for (option of supportOptionsList; track option) {
+              <label class="publish__checkbox">
+                <input
+                  type="checkbox"
+                  [checked]="selectedSupportOptions.includes(option)"
+                  (change)="toggleSupportOption(option)"
+                />
+                {{ option }}
+              </label>
+            }
+          </fieldset>
+        </div>
+      }
+
+      <div class="publish__actions">
+        @if (currentStep() > 1) {
+          <button type="button" class="btn btn--outline" (click)="previous()">Précédent</button>
+        }
+        @if (currentStep() < totalSteps) {
+          <button type="submit" class="btn btn--primary">Suivant</button>
+        } @else {
+          <button type="submit" class="btn btn--primary" [disabled]="loading()">
+            @if (loading()) {
+              <span class="spinner-inline"></span>
+            }
+            Publier l'application
+          </button>
+        }
+      </div>
+    </form>
+  </section>
+}

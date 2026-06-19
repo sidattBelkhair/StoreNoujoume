@@ -1,0 +1,26 @@
+<section class="container search">
+  <h1>Rechercher une application</h1>
+  <input
+    type="text"
+    placeholder="Nom, description, mot-clé..."
+    [(ngModel)]="query"
+    (ngModelChange)="onQueryChange()"
+    class="search__input"
+  />
+
+  @if (loading()) {
+    <app-loading-spinner />
+  } @else if (error()) {
+    <app-empty-state [message]="error()!" icon="⚠️" />
+  } @else if (!searched()) {
+    <app-empty-state message="Commence à taper pour rechercher une application." icon="🔍" />
+  } @else if (results().length === 0) {
+    <app-empty-state message="Aucun résultat pour cette recherche." />
+  } @else {
+    <div class="grid">
+      @for (app of results(); track app.id) {
+        <app-app-card [app]="app" />
+      }
+    </div>
+  }
+</section>

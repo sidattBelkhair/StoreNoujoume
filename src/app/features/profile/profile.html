@@ -1,0 +1,59 @@
+@if (loading()) {
+  <app-loading-spinner />
+} @else {
+  <section class="container profile">
+    <h1>Mon profil</h1>
+
+    @if (errorMessage()) {
+      <p class="profile__error">{{ errorMessage() }}</p>
+    }
+    @if (successMessage()) {
+      <p class="profile__success">{{ successMessage() }}</p>
+    }
+
+    <form class="profile__form" (ngSubmit)="submit()">
+      <label>
+        Photo de profil
+        <input type="file" accept="image/*" (change)="onAvatarSelected($event)" />
+      </label>
+      @if (uploadingAvatar()) {
+        <app-loading-spinner />
+      }
+      @if (avatarUrl) {
+        <img [src]="avatarUrl" alt="Avatar" class="profile__avatar" />
+      }
+
+      <label>
+        Nom complet
+        <input type="text" [(ngModel)]="name" name="name" required />
+      </label>
+
+      <label>
+        Téléphone
+        <input type="tel" [(ngModel)]="phone" name="phone" />
+      </label>
+
+      <label>
+        Entreprise
+        <input type="text" [(ngModel)]="companyName" name="companyName" />
+      </label>
+
+      <label>
+        Site web
+        <input type="url" [(ngModel)]="website" name="website" />
+      </label>
+
+      <label>
+        Bio
+        <textarea [(ngModel)]="bio" name="bio" rows="3"></textarea>
+      </label>
+
+      <button type="submit" class="btn btn--primary" [disabled]="saving()">
+        @if (saving()) {
+          <span class="spinner-inline"></span>
+        }
+        Enregistrer
+      </button>
+    </form>
+  </section>
+}

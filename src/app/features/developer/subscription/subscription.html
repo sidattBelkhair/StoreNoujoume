@@ -1,0 +1,81 @@
+<section class="container subscription">
+  <h1>Abonnement</h1>
+
+  @if (status()) {
+    <div class="subscription__status" [class.subscription__status--active]="status()!.has_active_subscription">
+      @if (status()!.has_active_subscription) {
+        Abonnement actif — {{ status()!.plan_name }} (expire le {{ status()!.expires_at }}, {{ status()!.days_remaining }} jours restants)
+      } @else {
+        Aucun abonnement actif pour le moment.
+      }
+    </div>
+  }
+
+  @if (loading()) {
+    <app-loading-spinner />
+  } @else {
+    <div class="subscription__packages">
+      @for (pkg of packages(); track pkg.id) {
+        <div class="subscription__package" [class.subscription__package--selected]="selectedPackage()?.id === pkg.id">
+          @if (pkg.is_popular) {
+            <span class="subscription__tag subscription__tag--popular">Populaire</span>
+          }
+          @if (pkg.is_best_value) {
+            <span class="subscription__tag subscription__tag--best">Meilleure valeur</span>
+          }
+          <h3>{{ pkg.name }}</h3>
+          <p class="subscription__price">{{ pkg.price }} MRU <span>/ {{ pkg.duration_months }} mois</span></p>
+          <ul>
+            @for (feature of pkg.features; track feature) {
+              <li>{{ feature }}</li>
+            }
+          </ul>
+          <button type="button" class="btn btn--primary" (click)="selectPackage(pkg)">Choisir ce forfait</button>
+        </div>
+      }
+    </div>
+  }
+
+  @if (selectedPackage() && paymentInfo()) {
+    <div class="subscription__payment">
+      <h2>Paiement pour {{ selectedPackage()!.name }}</h2>
+      <div class="subscription__bank-info">
+        <p><strong>Banque :</strong> {{ paymentInfo()!.bank_name }}</p>
+        <p><strong>Compte :</strong> {{ paymentInfo()!.account_number }}</p>
+        <p><strong>Téléphone :</strong> {{ paymentInfo()!.phone }}</p>
+        <p>{{ paymentInfo()!.instructions }}</p>
+      </div>
+
+      @if (errorMessage()) {
+        <p class="subscription__error">{{ errorMessage() }}</p>
+      }
+      @if (successMessage()) {
+        <p class="subscription__success">{{ successMessage() }}</p>
+      }
+
+      <form class="subscription__form" (ngSubmit)="submitPayment()">
+        <label>
+          Preuve de paiement *
+          <input type="file" accept="image/*,.pdf" (change)="onProofSelected($event)" />
+        </label>
+
+        <label>
+          Date du paiement *
+          <input type="date" [(ngModel)]="paymentDate" name="paymentDate" required />
+        </label>
+
+        <label>
+          Notes (optionnel)
+          <textarea [(ngModel)]="notes" name="notes" rows="3"></textarea>
+        </label>
+
+        <button type="submit" class="btn btn--primary" [disabled]="submitting()">
+          @if (submitting()) {
+            <span class="spinner-inline"></span>
+          }
+          Envoyer la preuve de paiement
+        </button>
+      </form>
+    </div>
+  }
+</section>

@@ -1,0 +1,82 @@
+@use '../../shared-styles/variables' as *;
+
+.app-card {
+  display: block;
+  position: relative;
+  background-color: $color-white;
+  border-radius: $radius;
+  padding: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  &__badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: $color-primary;
+    color: $color-white;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 20px;
+  }
+
+  &__icon {
+    width: 56px;
+    height: 56px;
+    border-radius: $radius;
+    overflow: hidden;
+    margin-bottom: 12px;
+    background-color: $color-cream;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__icon-placeholder {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: $color-primary-dark;
+    text-transform: uppercase;
+  }
+
+  &__name {
+    margin: 0 0 4px;
+    font-size: 1.05rem;
+    color: $color-text;
+  }
+
+  &__tagline {
+    margin: 0 0 8px;
+    font-size: 0.875rem;
+    color: $color-text-muted;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: $color-text-muted;
+  }
+
+  &__rating {
+    color: $color-primary-dark;
+    font-weight: 600;
+  }
+}

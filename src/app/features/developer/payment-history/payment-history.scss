@@ -1,0 +1,71 @@
+@use '../../../shared-styles/variables' as *;
+
+.payment-history {
+  padding: 32px 16px;
+
+  h1 {
+    margin: 0 0 20px;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    background-color: $color-white;
+    border-radius: $radius;
+    padding: 14px 18px;
+  }
+
+  &__date {
+    display: block;
+    font-size: 0.8rem;
+    color: $color-text-muted;
+  }
+
+  &__amount {
+    font-weight: 700;
+    margin-left: auto;
+  }
+
+  &__badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    color: $color-white;
+
+    &--pending {
+      background-color: $color-warning;
+    }
+
+    &--approved {
+      background-color: $color-secondary;
+    }
+
+    &--rejected, &--cancelled {
+      background-color: $color-danger;
+    }
+  }
+}
+
+.btn--danger {
+  border: none;
+  background-color: $color-danger;
+  color: $color-white;
+  padding: 8px 14px;
+  border-radius: $radius;
+  font-weight: 600;
+  font-size: 0.8rem;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}

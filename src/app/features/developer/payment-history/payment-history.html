@@ -1,0 +1,36 @@
+<section class="container payment-history">
+  <h1>Historique des paiements</h1>
+
+  @if (loading()) {
+    <app-loading-spinner />
+  } @else if (error()) {
+    <app-empty-state [message]="error()!" icon="⚠️" />
+  } @else if (transactions().length === 0) {
+    <app-empty-state message="Aucune transaction pour le moment." />
+  } @else {
+    <div class="payment-history__list">
+      @for (transaction of transactions(); track transaction.id) {
+        <div class="payment-history__item">
+          <div>
+            <strong>{{ transaction.package_name }}</strong>
+            <span class="payment-history__date">{{ transaction.payment_date }}</span>
+          </div>
+          <span class="payment-history__amount">{{ transaction.amount }} MRU</span>
+          <span class="payment-history__badge payment-history__badge--{{ transaction.status }}">
+            {{ statusLabel(transaction.status) }}
+          </span>
+          @if (transaction.status === 'pending') {
+            <button
+              type="button"
+              class="btn btn--danger"
+              [disabled]="cancellingId() === transaction.id"
+              (click)="cancel(transaction)"
+            >
+              Annuler
+            </button>
+          }
+        </div>
+      }
+    </div>
+  }
+</section>

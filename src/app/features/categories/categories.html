@@ -1,0 +1,17 @@
+<section class="container categories">
+  <h1>Catégories</h1>
+
+  @if (loading()) {
+    <app-loading-spinner />
+  } @else if (error()) {
+    <app-empty-state [message]="error()!" icon="⚠️" />
+  } @else if (categories().length === 0) {
+    <app-empty-state message="Aucune catégorie disponible." />
+  } @else {
+    <div class="grid">
+      @for (category of categories(); track category.id) {
+        <app-category-card [category]="category" />
+      }
+    </div>
+  }
+</section>

@@ -1,0 +1,41 @@
+<section class="container app-list">
+  <h1>Toutes les applications</h1>
+
+  <div class="app-list__filters">
+    <input
+      type="text"
+      placeholder="Rechercher une application..."
+      [(ngModel)]="search"
+      (ngModelChange)="onSearchChange()"
+      class="app-list__search"
+    />
+
+    <select [(ngModel)]="categoryId" (ngModelChange)="onFilterChange()">
+      <option [ngValue]="null">Toutes les catégories</option>
+      @for (category of categories(); track category.id) {
+        <option [ngValue]="category.id">{{ category.name }}</option>
+      }
+    </select>
+
+    <select [(ngModel)]="sort" (ngModelChange)="onFilterChange()">
+      <option value="recent">Plus récentes</option>
+      <option value="downloads">Plus téléchargées</option>
+      <option value="rating">Meilleures notes</option>
+    </select>
+  </div>
+
+  @if (loading()) {
+    <app-loading-spinner />
+  } @else if (error()) {
+    <app-empty-state [message]="error()!" icon="⚠️" />
+  } @else if (apps().length === 0) {
+    <app-empty-state message="Aucune application ne correspond à ta recherche." />
+  } @else {
+    <div class="grid">
+      @for (app of apps(); track app.id) {
+        <app-app-card [app]="app" />
+      }
+    </div>
+    <app-pagination [currentPage]="currentPage()" [lastPage]="lastPage()" (pageChange)="onPageChange($event)" />
+  }
+</section>

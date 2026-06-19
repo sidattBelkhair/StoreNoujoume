@@ -1,0 +1,29 @@
+@use '../../shared-styles/variables' as *;
+
+.not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 80px 16px;
+
+  h1 {
+    font-size: 4rem;
+    margin: 0;
+    color: $color-primary;
+  }
+
+  p {
+    color: $color-text-muted;
+    margin: 8px 0 24px;
+  }
+}
+
+.btn {
+  display: inline-block;
+  padding: 12px 24px;
+  border-radius: $radius;
+  font-weight: 600;
+  background-color: $color-primary;
+  color: $color-white;
+}

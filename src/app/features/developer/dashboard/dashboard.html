@@ -1,0 +1,63 @@
+<section class="container dashboard">
+  <h1>Tableau de bord</h1>
+
+  @if (profile()) {
+    <div class="dashboard__profile">
+      <strong>{{ profile()!.name }}</strong>
+      <span>{{ profile()!.email }}</span>
+    </div>
+  }
+
+  @if (subscriptionStatus()) {
+    <div class="dashboard__subscription" [class.dashboard__subscription--active]="subscriptionStatus()!.has_active_subscription">
+      @if (subscriptionStatus()!.has_active_subscription) {
+        <span>Abonnement actif — {{ subscriptionStatus()!.plan_name }} (expire le {{ subscriptionStatus()!.expires_at }})</span>
+      } @else {
+        <span>Aucun abonnement actif.</span>
+      }
+      <a routerLink="/abonnement" class="btn btn--outline">Gérer l'abonnement</a>
+    </div>
+  }
+
+  <div class="dashboard__header">
+    <h2>Mes applications</h2>
+    <a routerLink="/publier-une-app" class="btn btn--primary">Publier une nouvelle app</a>
+  </div>
+
+  @if (loading()) {
+    <app-loading-spinner />
+  } @else if (myApps().length === 0) {
+    <app-empty-state message="Tu n'as encore publié aucune application." />
+  } @else {
+    <div class="dashboard__list">
+      @for (app of myApps(); track app.id) {
+        <div class="dashboard__item">
+          <div class="dashboard__item-icon">
+            @if (app.icon_url) {
+              <img [src]="app.icon_url" [alt]="app.app_name" />
+            } @else {
+              <span>{{ app.app_name.charAt(0) }}</span>
+            }
+          </div>
+          <div class="dashboard__item-body">
+            <strong>{{ app.app_name }}</strong>
+            <span class="dashboard__status" [class.dashboard__status--approved]="app.is_approved">
+              {{ statusLabel(app) }}
+            </span>
+          </div>
+          <div class="dashboard__item-actions">
+            <a [routerLink]="['/publier-une-app', app.id]" class="btn btn--outline">Modifier</a>
+            <button
+              type="button"
+              class="btn btn--danger"
+              [disabled]="deletingId() === app.id"
+              (click)="deleteApp(app)"
+            >
+              Supprimer
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</section>

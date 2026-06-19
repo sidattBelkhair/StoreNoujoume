@@ -1,0 +1,30 @@
+<section class="container category-detail">
+  @if (category()) {
+    <header class="category-detail__header">
+      <div class="category-detail__icon" [style.background-color]="category()!.color || null">
+        <span class="material-symbols-outlined">{{ category()!.icon || 'apps' }}</span>
+      </div>
+      <div>
+        <h1>{{ category()!.name }}</h1>
+        @if (category()!.description) {
+          <p>{{ category()!.description }}</p>
+        }
+      </div>
+    </header>
+  }
+
+  @if (loading()) {
+    <app-loading-spinner />
+  } @else if (error()) {
+    <app-empty-state [message]="error()!" icon="⚠️" />
+  } @else if (apps().length === 0) {
+    <app-empty-state message="Aucune application dans cette catégorie." />
+  } @else {
+    <div class="grid">
+      @for (app of apps(); track app.id) {
+        <app-app-card [app]="app" />
+      }
+    </div>
+    <app-pagination [currentPage]="currentPage()" [lastPage]="lastPage()" (pageChange)="onPageChange($event)" />
+  }
+</section>

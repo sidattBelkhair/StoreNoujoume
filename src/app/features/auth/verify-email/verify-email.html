@@ -1,0 +1,51 @@
+<section class="auth">
+  <form class="auth__card" (ngSubmit)="submit()">
+    <h1>Vérification de l'email</h1>
+
+    @if (errorMessage()) {
+      <p class="auth__error">{{ errorMessage() }}</p>
+    }
+    @if (infoMessage()) {
+      <p class="auth__info">{{ infoMessage() }}</p>
+    }
+
+    <label>
+      Email
+      <input type="email" name="email" [(ngModel)]="email" required />
+    </label>
+
+    @if (needsManualEntry()) {
+      <p class="auth__info">
+        Confirme à nouveau ton nom et ton mot de passe pour finaliser ton inscription.
+      </p>
+      <label>
+        Nom complet
+        <input type="text" name="name" [(ngModel)]="name" required />
+      </label>
+      <label>
+        Mot de passe
+        <input type="password" name="password" [(ngModel)]="password" required minlength="8" />
+      </label>
+    }
+
+    <label>
+      Code de vérification
+      <input type="text" name="code" [(ngModel)]="code" required />
+    </label>
+
+    <button type="submit" class="btn btn--primary" [disabled]="loading()">
+      @if (loading()) {
+        <span class="spinner-inline"></span>
+      }
+      Vérifier
+    </button>
+
+    <button type="button" class="btn btn--outline" [disabled]="resending()" (click)="resend()">
+      Renvoyer le code
+    </button>
+
+    <p class="auth__footer">
+      <a routerLink="/connexion">Retour à la connexion</a>
+    </p>
+  </form>
+</section>

@@ -1,0 +1,30 @@
+<section class="auth">
+  <form class="auth__card" (ngSubmit)="submit()">
+    <h1>Connexion</h1>
+
+    @if (errorMessage()) {
+      <p class="auth__error">{{ errorMessage() }}</p>
+    }
+
+    <label>
+      Email
+      <input type="email" name="email" [(ngModel)]="email" required />
+    </label>
+
+    <label>
+      Mot de passe
+      <input type="password" name="password" [(ngModel)]="password" required />
+    </label>
+
+    <button type="submit" class="btn btn--primary" [disabled]="loading()">
+      @if (loading()) {
+        <span class="spinner-inline"></span>
+      }
+      Se connecter
+    </button>
+
+    <p class="auth__footer">
+      Pas encore de compte ? <a routerLink="/inscription">Inscris-toi</a>
+    </p>
+  </form>
+</section>

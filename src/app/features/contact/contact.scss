@@ -1,0 +1,41 @@
+@use '../../shared-styles/variables' as *;
+
+.contact {
+  padding: 32px 16px;
+  max-width: 520px;
+  margin: 0 auto;
+
+  h1 {
+    margin: 0 0 12px;
+  }
+
+  p {
+    color: $color-text-muted;
+    margin-bottom: 24px;
+  }
+
+  &__card {
+    background-color: $color-white;
+    border-radius: $radius;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+    color: $color-text;
+
+    &:hover {
+      color: $color-primary-dark;
+    }
+  }
+
+  &__icon {
+    font-size: 1.25rem;
+  }
+}

@@ -1,0 +1,34 @@
+<header class="navbar">
+  <div class="container navbar__inner">
+    <a routerLink="/" class="navbar__logo" (click)="closeMenu()">
+      <img src="logo.svg" alt="" class="navbar__logo-img" />
+      <span>Noujoum Store</span>
+    </a>
+
+    <button class="navbar__burger" type="button" (click)="toggleMenu()" aria-label="Menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <nav class="navbar__links" [class.navbar__links--open]="menuOpen()">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenu()">Accueil</a>
+      <a routerLink="/categories" routerLinkActive="active" (click)="closeMenu()">Catégories</a>
+      <a routerLink="/rechercher" routerLinkActive="active" (click)="closeMenu()">Rechercher</a>
+      <a routerLink="/publier-une-app" routerLinkActive="active" (click)="closeMenu()">Publier mon App</a>
+
+      @if (authService.isAuthenticated()) {
+        <a routerLink="/tableau-de-bord" class="navbar__profile" routerLinkActive="active" (click)="closeMenu()">
+          @if (authService.currentUser()?.avatar_url) {
+            <img [src]="authService.currentUser()?.avatar_url" alt="" class="navbar__avatar" />
+          } @else {
+            <span class="navbar__avatar navbar__avatar--placeholder">{{ authService.currentUser()?.name?.charAt(0) }}</span>
+          }
+          <span>Profil</span>
+        </a>
+      } @else {
+        <a routerLink="/connexion" class="navbar__cta" (click)="closeMenu()">Connexion</a>
+      }
+    </nav>
+  </div>
+</header>

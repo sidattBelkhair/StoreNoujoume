@@ -1,0 +1,188 @@
+@use '../../../shared-styles/variables' as *;
+
+.subscription {
+  padding: 32px 16px;
+
+  h1 {
+    margin: 0 0 20px;
+  }
+
+  &__status {
+    background-color: rgba(217, 52, 43, 0.08);
+    border-radius: $radius;
+    padding: 14px 18px;
+    margin-bottom: 24px;
+    font-weight: 500;
+
+    &--active {
+      background-color: rgba(63, 143, 79, 0.1);
+    }
+  }
+
+  &__packages {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: 1fr;
+    margin-bottom: 32px;
+
+    @media (min-width: $breakpoint-tablet) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  &__package {
+    position: relative;
+    background-color: $color-white;
+    border-radius: $radius;
+    padding: 20px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border: 2px solid transparent;
+
+    &--selected {
+      border-color: $color-primary;
+    }
+
+    h3 {
+      margin: 0;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 18px;
+      flex: 1;
+      font-size: 0.875rem;
+      color: $color-text-muted;
+    }
+  }
+
+  &__tag {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 20px;
+    color: $color-white;
+
+    &--popular {
+      background-color: $color-primary;
+    }
+
+    &--best {
+      background-color: $color-secondary;
+      top: 36px;
+    }
+  }
+
+  &__price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+
+    span {
+      font-size: 0.85rem;
+      font-weight: 400;
+      color: $color-text-muted;
+    }
+  }
+
+  &__payment {
+    background-color: $color-white;
+    border-radius: $radius;
+    padding: 24px;
+    max-width: 480px;
+
+    h2 {
+      margin: 0 0 16px;
+    }
+  }
+
+  &__bank-info {
+    background-color: $color-cream;
+    border-radius: $radius;
+    padding: 14px;
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+
+    p {
+      margin: 4px 0;
+    }
+  }
+
+  &__error {
+    background-color: rgba(217, 52, 43, 0.1);
+    color: $color-danger;
+    padding: 10px 14px;
+    border-radius: $radius;
+    font-size: 0.9rem;
+  }
+
+  &__success {
+    background-color: rgba(63, 143, 79, 0.1);
+    color: $color-secondary;
+    padding: 10px 14px;
+    border-radius: $radius;
+    font-size: 0.9rem;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+
+    label {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    input, textarea {
+      padding: 10px 12px;
+      border-radius: $radius;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      font-family: inherit;
+    }
+  }
+}
+
+.btn {
+  border: none;
+  padding: 10px 18px;
+  border-radius: $radius;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  &--primary {
+    background-color: $color-primary;
+    color: $color-white;
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
+.spinner-inline {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-top-color: $color-white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

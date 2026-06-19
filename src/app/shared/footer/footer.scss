@@ -1,0 +1,45 @@
+@use '../../shared-styles/variables' as *;
+
+.footer {
+  background-color: $color-secondary;
+  color: $color-white;
+  margin-top: auto;
+  padding: 24px 0;
+
+  &__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    text-align: center;
+
+    @media (min-width: $breakpoint-tablet) {
+      flex-direction: row;
+      justify-content: space-between;
+      text-align: left;
+    }
+  }
+
+  &__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+
+    a {
+      color: $color-white;
+      opacity: 0.9;
+
+      &:hover {
+        opacity: 1;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &__copyright {
+    margin: 0;
+    font-size: 0.875rem;
+    opacity: 0.85;
+  }
+}

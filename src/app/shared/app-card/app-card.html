@@ -1,0 +1,24 @@
+<a class="app-card" [routerLink]="['/apps', app().id]">
+  @if (app().is_featured) {
+    <span class="app-card__badge">Sponsorisé</span>
+  }
+  <div class="app-card__icon">
+    @if (app().icon_url) {
+      <img [src]="app().icon_url" [alt]="app().app_name" />
+    } @else {
+      <span class="app-card__icon-placeholder">{{ app().app_name.charAt(0) }}</span>
+    }
+  </div>
+  <div class="app-card__body">
+    <h3 class="app-card__name">{{ app().app_name }}</h3>
+    @if (app().tagline) {
+      <p class="app-card__tagline">{{ app().tagline }}</p>
+    }
+    <div class="app-card__meta">
+      @if (app().category?.name) {
+        <span class="app-card__category">{{ app().category?.name }}</span>
+      }
+      <span class="app-card__rating">★ {{ app().rating }}</span>
+    </div>
+  </div>
+</a>

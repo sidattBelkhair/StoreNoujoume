@@ -1,0 +1,116 @@
+@use '../../shared-styles/variables' as *;
+
+.navbar {
+  background-color: $color-white;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  &__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: $color-primary-dark;
+  }
+
+  &__logo-img {
+    width: 32px;
+    height: 32px;
+  }
+
+  &__burger {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    padding: 8px;
+
+    span {
+      width: 24px;
+      height: 2px;
+      background-color: $color-text;
+    }
+
+    @media (min-width: $breakpoint-tablet) {
+      display: none;
+    }
+  }
+
+  &__links {
+    display: none;
+    align-items: center;
+    gap: 24px;
+
+    a {
+      color: $color-text;
+      font-weight: 500;
+
+      &.active {
+        color: $color-primary-dark;
+      }
+    }
+
+    &--open {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+      position: absolute;
+      top: 64px;
+      left: 0;
+      right: 0;
+      background-color: $color-white;
+      padding: 16px 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    @media (min-width: $breakpoint-tablet) {
+      display: flex;
+      position: static;
+      box-shadow: none;
+      padding: 0;
+    }
+  }
+
+  &__cta {
+    background-color: $color-primary;
+    color: $color-white !important;
+    padding: 8px 18px;
+    border-radius: $radius;
+    font-weight: 600;
+  }
+
+  &__profile {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+
+    &--placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: $color-secondary;
+      color: $color-white;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+  }
+}

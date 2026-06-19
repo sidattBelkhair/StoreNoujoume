@@ -1,0 +1,60 @@
+<section class="auth">
+  <form class="auth__card" (ngSubmit)="submit()">
+    <h1>Inscription</h1>
+
+    @if (errorMessage()) {
+      <p class="auth__error">{{ errorMessage() }}</p>
+    }
+
+    <label>
+      Nom complet *
+      <input type="text" name="name" [(ngModel)]="name" required />
+    </label>
+
+    <label>
+      Email *
+      <input type="email" name="email" [(ngModel)]="email" required />
+    </label>
+
+    <label>
+      Mot de passe * (8 caractères minimum)
+      <input type="password" name="password" [(ngModel)]="password" required minlength="8" />
+    </label>
+
+    <label>
+      Confirmer le mot de passe *
+      <input type="password" name="passwordConfirmation" [(ngModel)]="passwordConfirmation" required />
+    </label>
+
+    <label>
+      Téléphone
+      <input type="tel" name="phone" [(ngModel)]="phone" />
+    </label>
+
+    <label>
+      Nom de l'entreprise
+      <input type="text" name="companyName" [(ngModel)]="companyName" />
+    </label>
+
+    <label>
+      Site web
+      <input type="url" name="website" [(ngModel)]="website" />
+    </label>
+
+    <label>
+      Bio
+      <textarea name="bio" [(ngModel)]="bio" rows="3"></textarea>
+    </label>
+
+    <button type="submit" class="btn btn--primary" [disabled]="loading()">
+      @if (loading()) {
+        <span class="spinner-inline"></span>
+      }
+      S'inscrire
+    </button>
+
+    <p class="auth__footer">
+      Déjà un compte ? <a routerLink="/connexion">Connecte-toi</a>
+    </p>
+  </form>
+</section>
