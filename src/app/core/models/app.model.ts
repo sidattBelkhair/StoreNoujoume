@@ -13,6 +13,8 @@ export interface AppCategory {
   subcategories: string[] | null;
   is_active: boolean;
   apps_count: number;
+  // GET /categories/{id} includes the apps array inline
+  apps?: NoujoumApp[];
 }
 
 export interface AppDeveloper {

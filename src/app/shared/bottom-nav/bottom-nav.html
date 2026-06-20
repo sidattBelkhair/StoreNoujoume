@@ -1,0 +1,25 @@
+<nav class="bottom-nav">
+  <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="bottom-nav__item">
+    <span class="material-symbols-outlined">home</span>
+    <span class="bottom-nav__label">Accueil</span>
+  </a>
+  <a routerLink="/categories" routerLinkActive="active" class="bottom-nav__item">
+    <span class="material-symbols-outlined">grid_view</span>
+    <span class="bottom-nav__label">Catégories</span>
+  </a>
+  <a routerLink="/rechercher" routerLinkActive="active" class="bottom-nav__item">
+    <span class="material-symbols-outlined">search</span>
+    <span class="bottom-nav__label">Rechercher</span>
+  </a>
+  @if (authService.isAuthenticated()) {
+    <a routerLink="/tableau-de-bord" routerLinkActive="active" class="bottom-nav__item">
+      <span class="material-symbols-outlined">person</span>
+      <span class="bottom-nav__label">Profil</span>
+    </a>
+  } @else {
+    <a routerLink="/connexion" routerLinkActive="active" class="bottom-nav__item">
+      <span class="material-symbols-outlined">person</span>
+      <span class="bottom-nav__label">Profil</span>
+    </a>
+  }
+</nav>

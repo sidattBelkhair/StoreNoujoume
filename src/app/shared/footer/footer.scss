@@ -3,32 +3,30 @@
 .footer {
   background-color: $color-secondary;
   color: $color-white;
-  margin-top: auto;
   padding: 24px 0;
+  display: none; // bottom-nav replaces footer on mobile/tablet
+
+  @media (min-width: $breakpoint-desktop) {
+    display: block;
+  }
 
   &__inner {
     display: flex;
-    flex-direction: column;
-    gap: 12px;
+    flex-direction: row;
+    justify-content: space-between;
     align-items: center;
-    text-align: center;
-
-    @media (min-width: $breakpoint-tablet) {
-      flex-direction: row;
-      justify-content: space-between;
-      text-align: left;
-    }
+    gap: 12px;
   }
 
   &__links {
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
-    justify-content: center;
 
     a {
       color: $color-white;
       opacity: 0.9;
+      text-decoration: none;
 
       &:hover {
         opacity: 1;
@@ -41,5 +39,6 @@
     margin: 0;
     font-size: 0.875rem;
     opacity: 0.85;
+    white-space: nowrap;
   }
 }

@@ -1,9 +1,24 @@
 :host {
+  display: block;
+}
+
+.shell-body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  padding-top: 56px; // mobile topbar height
+
+  @media (min-width: 1024px) {
+    padding-top: 0;
+    margin-left: 240px; // sidebar width
+  }
 }
 
-.app-main {
+.shell-main {
   flex: 1;
+  padding-bottom: 60px; // bottom nav height on mobile/tablet
+
+  @media (min-width: 1024px) {
+    padding-bottom: 0;
+  }
 }

@@ -1,100 +1,144 @@
 @use '../../shared-styles/variables' as *;
 
-.navbar {
-  background-color: $color-white;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-  position: sticky;
+// ---- Mobile / Tablet topbar ----
+.topbar {
+  display: flex;
+  position: fixed;
   top: 0;
-  z-index: 100;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  height: 56px;
+  background-color: $color-primary;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
 
-  &__inner {
+  @media (min-width: $breakpoint-desktop) {
+    display: none;
+  }
+
+  &__brand {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    height: 64px;
   }
 
   &__logo {
+    width: 36px;
+    height: 36px;
+  }
+
+  &__search {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-weight: 700;
-    font-size: 1.25rem;
-    color: $color-primary-dark;
-  }
+    color: $color-white;
 
-  &__logo-img {
-    width: 32px;
-    height: 32px;
+    .material-symbols-outlined {
+      font-size: 24px;
+    }
   }
+}
 
-  &__burger {
+// ---- Desktop sidebar ----
+.sidebar {
+  display: none;
+
+  @media (min-width: $breakpoint-desktop) {
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    background: none;
-    border: none;
-    padding: 8px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 240px;
+    background-color: $color-white;
+    border-right: 1px solid rgba(0, 0, 0, 0.08);
+    z-index: 100;
+    overflow-y: auto;
+  }
 
-    span {
-      width: 24px;
-      height: 2px;
-      background-color: $color-text;
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    text-decoration: none;
+  }
+
+  &__logo {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+  }
+
+  &__brand-name {
+    font-weight: 700;
+    font-size: 1rem;
+    color: $color-primary-dark;
+    line-height: 1.2;
+  }
+
+  &__nav {
+    flex: 1;
+    padding: 12px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    color: $color-text;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background-color 0.15s ease, color 0.15s ease;
+    text-decoration: none;
+
+    .material-symbols-outlined {
+      font-size: 22px;
+      color: $color-text-muted;
+      transition: color 0.15s ease;
     }
 
-    @media (min-width: $breakpoint-tablet) {
-      display: none;
+    &:hover {
+      background-color: rgba($color-primary, 0.07);
+    }
+
+    &.active {
+      background-color: rgba($color-primary, 0.12);
+      color: $color-primary-dark;
+      font-weight: 600;
+
+      .material-symbols-outlined {
+        color: $color-primary;
+      }
     }
   }
 
-  &__links {
-    display: none;
-    align-items: center;
-    gap: 24px;
-
-    a {
-      color: $color-text;
-      font-weight: 500;
-
-      &.active {
-        color: $color-primary-dark;
-      }
-    }
-
-    &--open {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 16px;
-      position: absolute;
-      top: 64px;
-      left: 0;
-      right: 0;
-      background-color: $color-white;
-      padding: 16px 20px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
-    }
-
-    @media (min-width: $breakpoint-tablet) {
-      display: flex;
-      position: static;
-      box-shadow: none;
-      padding: 0;
-    }
+  &__footer {
+    padding: 12px 8px 20px;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
   }
 
   &__cta {
+    display: block;
     background-color: $color-primary;
-    color: $color-white !important;
-    padding: 8px 18px;
-    border-radius: $radius;
+    color: $color-white;
+    padding: 10px 16px;
+    border-radius: 10px;
     font-weight: 600;
-  }
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.15s ease;
 
-  &__profile {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    &:hover {
+      background-color: $color-primary-dark;
+    }
   }
 
   &__avatar {
@@ -102,6 +146,7 @@
     height: 32px;
     border-radius: 50%;
     object-fit: cover;
+    flex-shrink: 0;
 
     &--placeholder {
       display: flex;
@@ -110,6 +155,7 @@
       background-color: $color-secondary;
       color: $color-white;
       font-weight: 700;
+      font-size: 0.875rem;
       text-transform: uppercase;
     }
   }

@@ -1,45 +1,70 @@
 @use '../../../shared-styles/variables' as *;
 
-.category-detail {
-  padding: 32px 16px;
+// ---- Banner (category color header) ----
+.cat-banner {
+  background-color: $color-primary;
+  padding: 24px 0;
+  color: $color-white;
 
-  &__header {
-    margin-bottom: 24px;
+  &__inner {
     display: flex;
     align-items: center;
     gap: 16px;
-
-    h1 {
-      margin: 0 0 4px;
-    }
-
-    p {
-      color: $color-text-muted;
-      margin: 0;
-    }
   }
 
   &__icon {
     flex-shrink: 0;
-    width: 56px;
-    height: 56px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
-    background-color: $color-primary;
-    color: $color-white;
+    background-color: rgba($color-white, 0.2);
     display: flex;
     align-items: center;
     justify-content: center;
 
     .material-symbols-outlined {
-      font-size: 28px;
+      font-size: 30px;
+      color: $color-white;
     }
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__name {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: $color-white;
+  }
+
+  &__desc {
+    margin: 0;
+    font-size: 0.875rem;
+    color: rgba($color-white, 0.85);
+    line-height: 1.4;
+  }
+
+  &__count {
+    font-size: 0.8rem;
+    color: rgba($color-white, 0.75);
+    font-weight: 500;
   }
 }
 
-.grid {
+// ---- Apps grid ----
+.category-apps {
+  padding: 24px 16px;
+}
+
+.apps-grid {
   display: grid;
-  gap: 16px;
+  gap: 12px;
   grid-template-columns: 1fr;
+  margin-bottom: 24px;
 
   @media (min-width: $breakpoint-tablet) {
     grid-template-columns: repeat(3, 1fr);

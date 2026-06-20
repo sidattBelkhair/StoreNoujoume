@@ -1,18 +1,22 @@
-<section class="container category-detail">
-  @if (category()) {
-    <header class="category-detail__header">
-      <div class="category-detail__icon" [style.background-color]="category()!.color || null">
+<!-- Category header banner -->
+@if (category()) {
+  <div class="cat-banner" [style.background-color]="category()!.color || null">
+    <div class="container cat-banner__inner">
+      <div class="cat-banner__icon">
         <span class="material-symbols-outlined">{{ category()!.icon || 'apps' }}</span>
       </div>
-      <div>
-        <h1>{{ category()!.name }}</h1>
+      <div class="cat-banner__text">
+        <h1 class="cat-banner__name">{{ category()!.name }}</h1>
         @if (category()!.description) {
-          <p>{{ category()!.description }}</p>
+          <p class="cat-banner__desc">{{ category()!.description }}</p>
         }
+        <span class="cat-banner__count">{{ category()!.apps_count }} application{{ category()!.apps_count === 1 ? '' : 's' }}</span>
       </div>
-    </header>
-  }
+    </div>
+  </div>
+}
 
+<section class="container category-apps">
   @if (loading()) {
     <app-loading-spinner />
   } @else if (error()) {
@@ -20,11 +24,10 @@
   } @else if (apps().length === 0) {
     <app-empty-state message="Aucune application dans cette catégorie." />
   } @else {
-    <div class="grid">
+    <div class="apps-grid">
       @for (app of apps(); track app.id) {
         <app-app-card [app]="app" />
       }
     </div>
-    <app-pagination [currentPage]="currentPage()" [lastPage]="lastPage()" (pageChange)="onPageChange($event)" />
   }
 </section>

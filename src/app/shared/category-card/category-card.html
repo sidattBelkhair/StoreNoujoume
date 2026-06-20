@@ -6,8 +6,10 @@
       <span class="material-symbols-outlined">apps</span>
     }
   </div>
-  <h3 class="category-card__name">{{ category().name }}</h3>
-  <p class="category-card__count">
-    {{ category().apps_count }} app{{ category().apps_count === 1 ? '' : 's' }}
-  </p>
+  <div class="category-card__info">
+    <h3 class="category-card__name">{{ category().name }}</h3>
+    <p class="category-card__count">
+      {{ category().apps_count }} app{{ category().apps_count === 1 ? '' : 's' }}
+    </p>
+  </div>
 </a>

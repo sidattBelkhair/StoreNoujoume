@@ -1,34 +1,51 @@
-<header class="navbar">
-  <div class="container navbar__inner">
-    <a routerLink="/" class="navbar__logo" (click)="closeMenu()">
-      <img src="logo.svg" alt="" class="navbar__logo-img" />
-      <span>Noujoum Store</span>
-    </a>
-
-    <button class="navbar__burger" type="button" (click)="toggleMenu()" aria-label="Menu">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
-
-    <nav class="navbar__links" [class.navbar__links--open]="menuOpen()">
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenu()">Accueil</a>
-      <a routerLink="/categories" routerLinkActive="active" (click)="closeMenu()">Catégories</a>
-      <a routerLink="/rechercher" routerLinkActive="active" (click)="closeMenu()">Rechercher</a>
-      <a routerLink="/publier-une-app" routerLinkActive="active" (click)="closeMenu()">Publier mon App</a>
-
-      @if (authService.isAuthenticated()) {
-        <a routerLink="/tableau-de-bord" class="navbar__profile" routerLinkActive="active" (click)="closeMenu()">
-          @if (authService.currentUser()?.avatar_url) {
-            <img [src]="authService.currentUser()?.avatar_url" alt="" class="navbar__avatar" />
-          } @else {
-            <span class="navbar__avatar navbar__avatar--placeholder">{{ authService.currentUser()?.name?.charAt(0) }}</span>
-          }
-          <span>Profil</span>
-        </a>
-      } @else {
-        <a routerLink="/connexion" class="navbar__cta" (click)="closeMenu()">Connexion</a>
-      }
-    </nav>
-  </div>
+<!-- Mobile / Tablet topbar -->
+<header class="topbar">
+  <a routerLink="/" class="topbar__brand">
+    <img src="logo.svg" alt="Noujoum Store" class="topbar__logo" />
+  </a>
+  <a routerLink="/rechercher" class="topbar__search" aria-label="Rechercher">
+    <span class="material-symbols-outlined">search</span>
+  </a>
 </header>
+
+<!-- Desktop sidebar -->
+<aside class="sidebar">
+  <a routerLink="/" class="sidebar__brand">
+    <img src="logo.svg" alt="Noujoum Store" class="sidebar__logo" />
+    <span class="sidebar__brand-name">Noujoum Store</span>
+  </a>
+
+  <nav class="sidebar__nav">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="sidebar__link">
+      <span class="material-symbols-outlined">home</span>
+      <span>Accueil</span>
+    </a>
+    <a routerLink="/categories" routerLinkActive="active" class="sidebar__link">
+      <span class="material-symbols-outlined">grid_view</span>
+      <span>Catégories</span>
+    </a>
+    <a routerLink="/rechercher" routerLinkActive="active" class="sidebar__link">
+      <span class="material-symbols-outlined">search</span>
+      <span>Rechercher</span>
+    </a>
+    <a routerLink="/publier-une-app" routerLinkActive="active" class="sidebar__link">
+      <span class="material-symbols-outlined">upload</span>
+      <span>Publier mon App</span>
+    </a>
+  </nav>
+
+  <div class="sidebar__footer">
+    @if (authService.isAuthenticated()) {
+      <a routerLink="/tableau-de-bord" routerLinkActive="active" class="sidebar__link">
+        @if (authService.currentUser()?.avatar_url) {
+          <img [src]="authService.currentUser()?.avatar_url" alt="" class="sidebar__avatar" />
+        } @else {
+          <span class="sidebar__avatar sidebar__avatar--placeholder">{{ authService.currentUser()?.name?.charAt(0) }}</span>
+        }
+        <span>Profil</span>
+      </a>
+    } @else {
+      <a routerLink="/connexion" class="sidebar__cta">Connexion</a>
+    }
+  </div>
+</aside>

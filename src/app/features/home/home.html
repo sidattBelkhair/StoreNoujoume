@@ -1,84 +1,89 @@
+<!-- Hero (image 6 style) -->
 <section class="hero">
-  <div class="container hero__inner">
-    <img src="logo.svg" alt="Noujoum Store" class="hero__logo" />
-    <h1 class="hero__title">Noujoum Store</h1>
-    <p class="hero__subtitle">La marketplace mauritanienne des applications</p>
-    <div class="hero__actions">
-      <a routerLink="/apps" class="btn btn--white">Parcourir les apps</a>
-      <a routerLink="/publier-une-app" class="btn btn--secondary">Publier mon app</a>
-    </div>
-  </div>
+  <img src="logo.png" alt="Noujoum Store" class="hero__logo" />
 </section>
 
-<section class="section">
-  <div class="container">
-    <div class="promo-block">
-      <h2>Partagez votre innovation avec la Mauritanie</h2>
-      <p>Rejoignez notre marketplace et connectez-vous avec des clients potentiels à travers le pays.</p>
-      <a routerLink="/publier-une-app" class="btn btn--white">Commencer à publier</a>
-    </div>
+<div class="container">
 
-    <div class="ad-placeholder">
-      <span class="material-symbols-outlined">ads_click</span>
-      <p class="ad-placeholder__title">Publicité ici</p>
-      <p class="ad-placeholder__subtitle">Promouvez votre app auprès de milliers d'utilisateurs</p>
-    </div>
+  <!-- Quick action tabs (image 6) -->
+  <div class="quick-actions">
+    <a routerLink="/apps" class="quick-actions__btn quick-actions__btn--primary">
+      <span class="material-symbols-outlined">apps</span>
+      <span>Parcourir les Apps</span>
+    </a>
+    <a routerLink="/publier-une-app" class="quick-actions__btn">
+      <span class="material-symbols-outlined">upload</span>
+      <span>Publier mon App</span>
+    </a>
+  </div>
 
-    @if (stats()) {
-      <div class="stats-cards">
-        <div class="stats-cards__item">
-          <span class="stats-cards__value">{{ stats()?.total_apps }}+</span>
-          <span class="stats-cards__label">Apps disponibles</span>
-        </div>
-        <div class="stats-cards__item">
-          <span class="stats-cards__value">{{ stats()?.total_developers }}+</span>
-          <span class="stats-cards__label">Développeurs actifs</span>
-        </div>
+  <!-- Promo block (image 6) -->
+  <div class="promo-block">
+    <h2>Découvrez les meilleures solutions digitales mauritaniennes</h2>
+    <p>Trouvez des applications et logiciels créés par des développeurs locaux pour répondre à vos besoins.</p>
+    <a routerLink="/apps" class="promo-block__cta">Explorer maintenant</a>
+  </div>
+
+  <!-- Ad placeholder (image 6) -->
+  <div class="ad-placeholder">
+    <span class="material-symbols-outlined">ads_click</span>
+    <p class="ad-placeholder__title">Publicité ici</p>
+    <p class="ad-placeholder__sub">Promouvez votre app auprès de milliers d'utilisateurs</p>
+  </div>
+
+  <!-- Stats (image 6) -->
+  @if (stats()) {
+    <div class="stats">
+      <div class="stats__item">
+        <span class="stats__value">{{ stats()!.total_apps }}+</span>
+        <span class="stats__label">Apps disponibles</span>
       </div>
-    }
-  </div>
-</section>
-
-<section class="section">
-  <div class="container">
-    <div class="section__header">
-      <h2>Catégories populaires</h2>
-      <a routerLink="/categories">Voir tout</a>
+      <div class="stats__item">
+        <span class="stats__value">{{ stats()!.total_developers }}+</span>
+        <span class="stats__label">Développeurs actifs</span>
+      </div>
     </div>
-    @if (categories().length) {
-      <div class="grid grid--categories">
-        @for (category of categories(); track category.id) {
-          <app-category-card [category]="category" />
+  }
+
+  <!-- Catégories populaires (image 3 — primary content) -->
+  @if (categories().length) {
+    <div class="section">
+      <div class="section__head">
+        <h2 class="section__title">Catégories populaires</h2>
+        <a routerLink="/categories" class="section__see-all">Voir tout</a>
+      </div>
+      <div class="cat-grid">
+        @for (cat of categories(); track cat.id) {
+          <app-category-card [category]="cat" />
         }
       </div>
-    }
-  </div>
-</section>
+    </div>
+  }
 
-@if (featuredApps().length) {
-  <section class="section section--featured">
-    <div class="container">
-      <h2>Applications sponsorisées</h2>
-      <div class="grid grid--apps">
+  <!-- Applications sponsorisées -->
+  @if (featuredApps().length) {
+    <div class="section section--tinted">
+      <h2 class="section__title">Applications sponsorisées</h2>
+      <div class="app-grid">
         @for (app of featuredApps(); track app.id) {
           <app-app-card [app]="app" />
         }
       </div>
     </div>
-  </section>
-}
+  }
 
-<section class="section">
-  <div class="container">
-    <h2>Applications populaires</h2>
+  <!-- Applications populaires -->
+  <div class="section">
+    <h2 class="section__title">Applications populaires</h2>
     @if (loading()) {
       <app-loading-spinner />
     } @else if (popularApps().length) {
-      <div class="grid grid--apps">
+      <div class="app-grid">
         @for (app of popularApps(); track app.id) {
           <app-app-card [app]="app" />
         }
       </div>
     }
   </div>
-</section>
+
+</div>
