@@ -7,6 +7,7 @@ import { User } from '../../../core/models/user.model';
 import { NoujoumApp } from '../../../core/models/app.model';
 import { SubscriptionStatus } from '../../../core/models/subscription.model';
 import { unwrapPage } from '../../../core/utils/pagination.util';
+import { resolveAssetUrl } from '../../../core/utils/asset-url.util';
 import { LoadingSpinner } from '../../../shared/loading-spinner/loading-spinner';
 import { EmptyState } from '../../../shared/empty-state/empty-state';
 
@@ -17,6 +18,7 @@ import { EmptyState } from '../../../shared/empty-state/empty-state';
   styleUrl: './dashboard.scss',
 })
 export class Dashboard implements OnInit {
+  readonly resolveAssetUrl = resolveAssetUrl;
   readonly profile = signal<User | null>(null);
   readonly subscriptionStatus = signal<SubscriptionStatus | null>(null);
   readonly myApps = signal<NoujoumApp[]>([]);

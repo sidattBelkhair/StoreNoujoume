@@ -1,5 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { UploadService } from '../../core/services/upload.service';
 import { LoadingSpinner } from '../../shared/loading-spinner/loading-spinner';
@@ -26,7 +27,8 @@ export class Profile implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private uploadService: UploadService
+    private uploadService: UploadService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -100,5 +102,12 @@ export class Profile implements OnInit {
           this.errorMessage.set(err?.error?.message || 'La mise à jour a échoué.');
         },
       });
+  }
+
+  logout(): void {
+    this.authService.logout().subscribe({
+      complete: () => this.router.navigateByUrl('/connexion'),
+      error: () => this.router.navigateByUrl('/connexion'),
+    });
   }
 }

@@ -34,7 +34,7 @@
         <div class="dashboard__item">
           <div class="dashboard__item-icon">
             @if (app.icon_url) {
-              <img [src]="app.icon_url" [alt]="app.app_name" />
+              <img [src]="resolveAssetUrl(app.icon_url)" [alt]="app.app_name" />
             } @else {
               <span>{{ app.app_name.charAt(0) }}</span>
             }

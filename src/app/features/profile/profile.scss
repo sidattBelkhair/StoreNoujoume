@@ -55,6 +55,11 @@
       font-family: inherit;
     }
   }
+
+  &__logout {
+    width: 100%;
+    margin-top: 16px;
+  }
 }
 
 .btn {
@@ -70,6 +75,12 @@
   &--primary {
     background-color: $color-primary;
     color: $color-white;
+  }
+
+  &--outline {
+    background-color: transparent;
+    color: $color-danger;
+    border: 1px solid $color-danger;
   }
 
   &:disabled {

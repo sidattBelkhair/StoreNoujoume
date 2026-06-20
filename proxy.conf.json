@@ -1,0 +1,8 @@
+{
+  "/api": {
+    "target": "https://noujoumstore.com",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

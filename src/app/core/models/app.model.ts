@@ -123,6 +123,7 @@ export interface AppCreatePayload {
   key_features?: string[];
   business_sectors?: string[];
   support_options?: string[];
+  languages?: string[];
   tags?: string[];
 }
 

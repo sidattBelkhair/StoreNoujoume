@@ -4,20 +4,30 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AppService } from '../../../core/services/app.service';
 import { CategoryService } from '../../../core/services/category.service';
 import { UploadService } from '../../../core/services/upload.service';
-import { AppCategory, AppCreatePayload, AppPricingModel, SupportedPlatform } from '../../../core/models/app.model';
+import { AppCategory, AppCreatePayload, AppLicenseType, AppPricingModel, SupportedPlatform } from '../../../core/models/app.model';
 import { LoadingSpinner } from '../../../shared/loading-spinner/loading-spinner';
+import { resolveAssetUrl } from '../../../core/utils/asset-url.util';
 
 const TARGET_AUDIENCES = ['Particuliers', 'Petites entreprises', 'Grandes entreprises', 'Gouvernement'];
-const APP_TYPES = [
-  'Application mobile',
-  'Application web',
-  'Application desktop',
-  'SaaS / Cloud',
-  'API / Service',
-  'Plugin / Extension',
-  'Template / Modèle',
+// Le backend valide app_type contre une liste fixe de slugs (pas les libellés
+// français) — "web" est confirmé valide (apps existantes), les autres sont
+// les candidats les plus probables à vérifier en testant la publication.
+const APP_TYPES: { value: string; label: string }[] = [
+  { value: 'mobile', label: 'Application mobile' },
+  { value: 'web', label: 'Application web' },
+  { value: 'desktop', label: 'Application desktop' },
+  { value: 'saas', label: 'SaaS / Cloud' },
+  { value: 'api', label: 'API / Service' },
+  { value: 'plugin', label: 'Plugin / Extension' },
+  { value: 'template', label: 'Template / Modèle' },
 ];
 const PLATFORMS: SupportedPlatform[] = ['web', 'android', 'iOS'];
+const LICENSE_TYPES: { value: AppLicenseType; label: string }[] = [
+  { value: 'free', label: 'Gratuit' },
+  { value: 'one_time', label: 'Achat unique' },
+  { value: 'monthly', label: 'Abonnement mensuel' },
+  { value: 'yearly', label: 'Abonnement annuel' },
+];
 const BUSINESS_SECTORS = ['Commerce', 'Services', 'Industrie', 'Santé', 'Éducation', 'Agriculture'];
 const SUPPORT_OPTIONS = ['Email', 'Téléphone', 'Chat en ligne', 'Formation', 'Documentation'];
 
@@ -28,9 +38,11 @@ const SUPPORT_OPTIONS = ['Email', 'Téléphone', 'Chat en ligne', 'Formation', '
   styleUrl: './publish-app.scss',
 })
 export class PublishApp implements OnInit {
+  readonly resolveAssetUrl = resolveAssetUrl;
   readonly targetAudiences = TARGET_AUDIENCES;
   readonly appTypes = APP_TYPES;
   readonly platforms = PLATFORMS;
+  readonly licenseTypes = LICENSE_TYPES;
   readonly businessSectors = BUSINESS_SECTORS;
   readonly supportOptionsList = SUPPORT_OPTIONS;
 
@@ -60,8 +72,10 @@ export class PublishApp implements OnInit {
   supportedPlatforms: SupportedPlatform[] = [];
   currentVersion = '1.0.0';
   technicalRequirements = '';
+  languagesInput = '';
 
   pricingModel: AppPricingModel | '' = '';
+  licenseType: AppLicenseType | '' = '';
   pricing = '';
   hasFreeTrial = false;
   trialDays: number | null = null;
@@ -105,7 +119,9 @@ export class PublishApp implements OnInit {
           this.supportedPlatforms = app.supported_platforms || [];
           this.currentVersion = app.current_version || '1.0.0';
           this.technicalRequirements = app.technical_requirements || '';
+          this.languagesInput = (app.languages || []).join(', ');
           this.pricingModel = app.pricing_model || '';
+          this.licenseType = app.license_type || '';
           this.pricing = app.pricing || '';
           this.hasFreeTrial = app.has_free_trial;
           this.trialDays = app.trial_days;
@@ -224,14 +240,20 @@ export class PublishApp implements OnInit {
 
   private validateStep(step: number): boolean {
     if (step === 1) {
-      if (!this.appName || !this.description || !this.categoryId) {
+      if (!this.appName || !this.description || !this.categoryId || !this.targetAudience) {
+        this.stepError.set('Merci de remplir les champs obligatoires (*).');
+        return false;
+      }
+    }
+    if (step === 2) {
+      if (!this.appType || !this.languagesInput.trim()) {
         this.stepError.set('Merci de remplir les champs obligatoires (*).');
         return false;
       }
     }
     if (step === 3) {
-      if (!this.pricingModel) {
-        this.stepError.set('Merci de choisir un modèle de tarification.');
+      if (!this.pricingModel || !this.licenseType || !this.pricing) {
+        this.stepError.set('Merci de remplir les champs obligatoires (*).');
         return false;
       }
     }
@@ -239,7 +261,7 @@ export class PublishApp implements OnInit {
   }
 
   submit(): void {
-    if (!this.validateStep(1) || !this.validateStep(3)) {
+    if (!this.validateStep(1) || !this.validateStep(2) || !this.validateStep(3)) {
       this.currentStep.set(1);
       return;
     }
@@ -248,6 +270,10 @@ export class PublishApp implements OnInit {
       app_name: this.appName,
       tagline: this.tagline || undefined,
       description: this.description,
+      // La colonne `detailed_description` n'a pas de valeur par défaut en base
+      // (erreur SQL 1364) — il faut toujours l'envoyer, même en repli sur la
+      // description courte, vu qu'il n'y a pas de champ dédié dans l'UI.
+      detailed_description: this.description,
       category_id: this.categoryId!,
       subcategory: this.subcategory || undefined,
       target_audience: this.targetAudience || undefined,
@@ -256,7 +282,9 @@ export class PublishApp implements OnInit {
       app_type: this.appType || undefined,
       supported_platforms: this.supportedPlatforms.length ? this.supportedPlatforms : undefined,
       current_version: this.currentVersion || undefined,
+      languages: this.splitCommas(this.languagesInput),
       pricing_model: (this.pricingModel as AppPricingModel) || undefined,
+      license_type: (this.licenseType as AppLicenseType) || undefined,
       pricing: this.pricing || undefined,
       has_free_trial: this.hasFreeTrial,
       trial_days: this.hasFreeTrial ? this.trialDays ?? undefined : undefined,

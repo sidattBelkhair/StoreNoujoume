@@ -9,7 +9,7 @@
     <header class="app-detail__header">
       <div class="app-detail__icon">
         @if (app()!.icon_url) {
-          <img [src]="app()!.icon_url" [alt]="app()!.app_name" />
+          <img [src]="resolveAssetUrl(app()!.icon_url)" [alt]="app()!.app_name" />
         } @else {
           <span>{{ app()!.app_name.charAt(0) }}</span>
         }
@@ -48,7 +48,7 @@
         @if (activeScreenshot()) {
           <img
             class="app-detail__gallery-main"
-            [src]="activeScreenshot()!"
+            [src]="resolveAssetUrl(activeScreenshot())"
             alt="Capture d'écran"
             (click)="openLightbox(app()!.screenshots!.indexOf(activeScreenshot()!))"
           />
@@ -56,7 +56,7 @@
         <div class="app-detail__gallery-thumbs">
           @for (shot of app()!.screenshots; track shot; let i = $index) {
             <img
-              [src]="shot"
+              [src]="resolveAssetUrl(shot)"
               alt="Capture d'écran"
               [class.active]="shot === activeScreenshot()"
               (click)="selectScreenshot(shot); openLightbox(i)"
@@ -72,7 +72,7 @@
         <button type="button" class="lightbox__arrow lightbox__arrow--left" (click)="$event.stopPropagation(); prevScreenshot()" aria-label="Précédent">‹</button>
         <img
           class="lightbox__image"
-          [src]="app()!.screenshots![lightboxIndex()!]"
+          [src]="resolveAssetUrl(app()!.screenshots![lightboxIndex()!])"
           alt="Capture d'écran"
           (click)="$event.stopPropagation()"
         />

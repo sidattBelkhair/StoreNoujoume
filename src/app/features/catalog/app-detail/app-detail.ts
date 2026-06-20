@@ -4,6 +4,7 @@ import { AppService } from '../../../core/services/app.service';
 import { NoujoumApp } from '../../../core/models/app.model';
 import { LoadingSpinner } from '../../../shared/loading-spinner/loading-spinner';
 import { EmptyState } from '../../../shared/empty-state/empty-state';
+import { resolveAssetUrl } from '../../../core/utils/asset-url.util';
 
 @Component({
   selector: 'app-app-detail',
@@ -12,6 +13,7 @@ import { EmptyState } from '../../../shared/empty-state/empty-state';
   styleUrl: './app-detail.scss',
 })
 export class AppDetail implements OnInit {
+  readonly resolveAssetUrl = resolveAssetUrl;
   readonly app = signal<NoujoumApp | null>(null);
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);

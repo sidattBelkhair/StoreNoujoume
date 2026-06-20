@@ -35,8 +35,8 @@ export class SubscriptionService {
   submitPayment(packageId: number, proofFile: File, paymentDate: string, notes?: string) {
     const formData = new FormData();
     formData.append('package_id', String(packageId));
-    formData.append('proof_file', proofFile);
-    formData.append('payment_date', paymentDate);
+    formData.append('transaction_image', proofFile);
+    formData.append('paid_at', paymentDate);
     if (notes) formData.append('notes', notes);
     return this.http.post<ApiResponse<Transaction>>(`${this.api}/subscription/payment`, formData);
   }

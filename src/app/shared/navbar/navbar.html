@@ -1,7 +1,7 @@
 <!-- Mobile / Tablet topbar -->
 <header class="topbar">
   <a routerLink="/" class="topbar__brand">
-    <img src="logo.svg" alt="Noujoum Store" class="topbar__logo" />
+    <img src="logo-transparent.png" alt="Noujoum Store" class="topbar__logo" />
   </a>
   <a routerLink="/rechercher" class="topbar__search" aria-label="Rechercher">
     <span class="material-symbols-outlined">search</span>
@@ -11,7 +11,7 @@
 <!-- Desktop sidebar -->
 <aside class="sidebar">
   <a routerLink="/" class="sidebar__brand">
-    <img src="logo.svg" alt="Noujoum Store" class="sidebar__logo" />
+    <img src="logo-transparent.png" alt="Noujoum Store" class="sidebar__logo" />
     <span class="sidebar__brand-name">Noujoum Store</span>
   </a>
 
@@ -44,6 +44,10 @@
         }
         <span>Profil</span>
       </a>
+      <button type="button" class="sidebar__link sidebar__logout" (click)="logout()">
+        <span class="material-symbols-outlined">logout</span>
+        <span>Déconnexion</span>
+      </button>
     } @else {
       <a routerLink="/connexion" class="sidebar__cta">Connexion</a>
     }

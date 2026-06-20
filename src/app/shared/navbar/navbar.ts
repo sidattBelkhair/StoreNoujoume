@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 
 @Component({
@@ -9,5 +9,15 @@ import { AuthService } from '../../core/services/auth.service';
   styleUrl: './navbar.scss',
 })
 export class Navbar {
-  constructor(public authService: AuthService) {}
+  constructor(
+    public authService: AuthService,
+    private router: Router
+  ) {}
+
+  logout(): void {
+    this.authService.logout().subscribe({
+      complete: () => this.router.navigateByUrl('/connexion'),
+      error: () => this.router.navigateByUrl('/connexion'),
+    });
+  }
 }

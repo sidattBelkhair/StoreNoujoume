@@ -4,7 +4,7 @@
   }
   <div class="app-card__icon">
     @if (app().icon_url) {
-      <img [src]="app().icon_url" [alt]="app().app_name" />
+      <img [src]="resolveAssetUrl(app().icon_url)" [alt]="app().app_name" />
     } @else {
       <span class="app-card__icon-placeholder">{{ app().app_name.charAt(0) }}</span>
     }

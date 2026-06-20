@@ -62,8 +62,8 @@
           </label>
 
           <label>
-            Public cible
-            <select [(ngModel)]="targetAudience" name="targetAudience">
+            Public cible *
+            <select [(ngModel)]="targetAudience" name="targetAudience" required>
               <option value="">Choisir</option>
               @for (audience of targetAudiences; track audience) {
                 <option [value]="audience">{{ audience }}</option>
@@ -89,7 +89,7 @@
             <app-loading-spinner />
           }
           @if (iconUrl) {
-            <img [src]="iconUrl" alt="Icône" class="publish__preview-icon" />
+            <img [src]="resolveAssetUrl(iconUrl)" alt="Icône" class="publish__preview-icon" />
           }
 
           <label>
@@ -103,7 +103,7 @@
             <div class="publish__screenshots">
               @for (shot of screenshots; track shot) {
                 <div class="publish__screenshot">
-                  <img [src]="shot" alt="Capture" />
+                  <img [src]="resolveAssetUrl(shot)" alt="Capture" />
                   <button type="button" (click)="removeScreenshot(shot)">×</button>
                 </div>
               }
@@ -115,13 +115,24 @@
       @if (currentStep() === 2) {
         <div class="publish__fields">
           <label>
-            Type d'application
-            <select [(ngModel)]="appType" name="appType">
+            Type d'application *
+            <select [(ngModel)]="appType" name="appType" required>
               <option value="">Choisir</option>
-              @for (type of appTypes; track type) {
-                <option [value]="type">{{ type }}</option>
+              @for (type of appTypes; track type.value) {
+                <option [value]="type.value">{{ type.label }}</option>
               }
             </select>
+          </label>
+
+          <label>
+            Langues supportées * (séparées par des virgules)
+            <input
+              type="text"
+              [(ngModel)]="languagesInput"
+              name="languagesInput"
+              placeholder="ex: Français, Arabe, Anglais"
+              required
+            />
           </label>
 
           <fieldset>
@@ -163,8 +174,18 @@
           </label>
 
           <label>
-            Prix
-            <input type="text" [(ngModel)]="pricing" name="pricing" placeholder="ex: 500 MRU / mois" />
+            Type de licence *
+            <select [(ngModel)]="licenseType" name="licenseType" required>
+              <option value="">Choisir</option>
+              @for (type of licenseTypes; track type.value) {
+                <option [value]="type.value">{{ type.label }}</option>
+              }
+            </select>
+          </label>
+
+          <label>
+            Prix *
+            <input type="text" [(ngModel)]="pricing" name="pricing" placeholder="ex: 500 MRU / mois" required />
           </label>
 
           <label class="publish__checkbox">

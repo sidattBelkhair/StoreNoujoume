@@ -26,8 +26,8 @@ export interface PaymentInfo {
 
 export interface PaymentSubmitPayload {
   package_id: number;
-  proof_file: File;
-  payment_date: string;
+  transaction_image: File;
+  paid_at: string;
   notes?: string;
 }
 
