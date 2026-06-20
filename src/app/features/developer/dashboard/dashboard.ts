@@ -9,11 +9,10 @@ import { SubscriptionStatus } from '../../../core/models/subscription.model';
 import { unwrapPage } from '../../../core/utils/pagination.util';
 import { resolveAssetUrl } from '../../../core/utils/asset-url.util';
 import { LoadingSpinner } from '../../../shared/loading-spinner/loading-spinner';
-import { EmptyState } from '../../../shared/empty-state/empty-state';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [RouterLink, LoadingSpinner, EmptyState],
+  imports: [RouterLink, LoadingSpinner],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
@@ -24,6 +23,11 @@ export class Dashboard implements OnInit {
   readonly myApps = signal<NoujoumApp[]>([]);
   readonly loading = signal(true);
   readonly deletingId = signal<number | null>(null);
+  readonly currentLang = signal<'fr' | 'ar'>('fr');
+
+  setLang(lang: 'fr' | 'ar'): void {
+    this.currentLang.set(lang);
+  }
 
   constructor(
     private authService: AuthService,

@@ -8,5 +8,6 @@ import { Component, input } from '@angular/core';
 })
 export class EmptyState {
   readonly message = input('Aucun résultat trouvé.');
-  readonly icon = input('📭');
+  // Accepts any Material Symbol name. Default matches the mobile app's grid icon.
+  readonly icon = input('apps');
 }

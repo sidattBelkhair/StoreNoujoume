@@ -1,32 +1,40 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, ViewChild, ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Subject, debounceTime } from 'rxjs';
+import { RouterLink } from '@angular/router';
+import { Subject, Subscription, debounceTime } from 'rxjs';
 import { AppService } from '../../core/services/app.service';
 import { NoujoumApp } from '../../core/models/app.model';
 import { unwrapPage } from '../../core/utils/pagination.util';
-import { AppCard } from '../../shared/app-card/app-card';
 import { LoadingSpinner } from '../../shared/loading-spinner/loading-spinner';
-import { EmptyState } from '../../shared/empty-state/empty-state';
+import { resolveAssetUrl } from '../../core/utils/asset-url.util';
 
 @Component({
   selector: 'app-search',
-  imports: [FormsModule, AppCard, LoadingSpinner, EmptyState],
+  imports: [FormsModule, RouterLink, LoadingSpinner],
   templateUrl: './search.html',
   styleUrl: './search.scss',
 })
-export class Search implements OnInit {
+export class Search implements OnInit, OnDestroy {
+  readonly resolveAssetUrl = resolveAssetUrl;
   query = '';
   readonly results = signal<NoujoumApp[]>([]);
   readonly loading = signal(false);
   readonly searched = signal(false);
   readonly error = signal<string | null>(null);
 
+  @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
+
   private searchSubject = new Subject<string>();
+  private sub?: Subscription;
 
   constructor(private appService: AppService) {}
 
   ngOnInit(): void {
-    this.searchSubject.pipe(debounceTime(400)).subscribe((value) => this.runSearch(value));
+    this.sub = this.searchSubject.pipe(debounceTime(350)).subscribe((q) => this.runSearch(q));
+  }
+
+  ngOnDestroy(): void {
+    this.sub?.unsubscribe();
   }
 
   onQueryChange(): void {
@@ -36,6 +44,14 @@ export class Search implements OnInit {
       return;
     }
     this.searchSubject.next(this.query);
+  }
+
+  clearSearch(): void {
+    this.query = '';
+    this.results.set([]);
+    this.searched.set(false);
+    this.error.set(null);
+    this.searchInput?.nativeElement.focus();
   }
 
   private runSearch(query: string): void {

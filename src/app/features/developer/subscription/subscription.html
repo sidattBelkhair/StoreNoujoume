@@ -1,81 +1,205 @@
-<section class="container subscription">
-  <h1>Abonnement</h1>
+<!-- ============================================================
+     PAYMENT PAGE  (shown after selecting a plan)
+     ============================================================ -->
+@if (selectedPackage()) {
 
-  @if (status()) {
-    <div class="subscription__status" [class.subscription__status--active]="status()!.has_active_subscription">
-      @if (status()!.has_active_subscription) {
-        Abonnement actif — {{ status()!.plan_name }} (expire le {{ status()!.expires_at }}, {{ status()!.days_remaining }} jours restants)
-      } @else {
-        Aucun abonnement actif pour le moment.
-      }
+  <header class="sub-topbar">
+    <button type="button" class="sub-topbar__back" (click)="cancelSelection()">
+      <span class="material-symbols-outlined">arrow_back</span>
+    </button>
+    <span class="sub-topbar__title">Paiement</span>
+  </header>
+
+  <div class="pay-body">
+
+    @if (successMessage()) {
+      <p class="pay-msg pay-msg--success">{{ successMessage() }}</p>
+    }
+
+    <!-- Summary card -->
+    <div class="pay-summary">
+      <h2 class="pay-summary__title">Résumé de l'abonnement</h2>
+      <div class="pay-summary__row">
+        <span class="pay-summary__label">Package</span>
+        <strong class="pay-summary__value">{{ selectedPackage()!.name }}</strong>
+      </div>
+      <div class="pay-summary__row">
+        <span class="pay-summary__label">Durée</span>
+        <span class="pay-summary__value">{{ selectedPackage()!.duration_months }} mois</span>
+      </div>
+      <div class="pay-summary__row">
+        <span class="pay-summary__label">Prix</span>
+        <strong class="pay-summary__price">{{ selectedPackage()!.price | number:'1.0-0' }} MRU</strong>
+      </div>
     </div>
-  }
 
-  @if (loading()) {
-    <app-loading-spinner />
-  } @else {
-    <div class="subscription__packages">
+    <!-- Payment instructions -->
+    @if (paymentInfoLoading()) {
+      <app-loading-spinner />
+    } @else if (paymentInfo()) {
+      <div class="pay-instructions">
+        <div class="pay-instructions__head">
+          <span class="material-symbols-outlined pay-instructions__icon">info</span>
+          <span class="pay-instructions__label">Instructions de paiement</span>
+        </div>
+        <div class="pay-instructions__rows">
+          <div class="pay-instructions__row">
+            <span>Banque</span>
+            <span>{{ paymentInfo()!.bank_name }}</span>
+          </div>
+          <div class="pay-instructions__row">
+            <span>Numéro de compte</span>
+            <span>{{ paymentInfo()!.account_number }}</span>
+          </div>
+          <div class="pay-instructions__row">
+            <span>Téléphone</span>
+            <span>{{ paymentInfo()!.phone }}</span>
+          </div>
+        </div>
+        <p class="pay-instructions__note">{{ paymentInfo()!.instructions }}</p>
+      </div>
+    }
+
+    <!-- Proof upload -->
+    <div class="pay-field">
+      <p class="pay-field__label">Preuve de transaction requise</p>
+      <p class="pay-field__sublabel">Télécharger le reçu ou la preuve de transaction</p>
+      <label class="pay-upload" for="proofInput">
+        @if (proofFile) {
+          <span class="material-symbols-outlined pay-upload__icon pay-upload__icon--done">check_circle</span>
+          <span class="pay-upload__text">{{ proofFile.name }}</span>
+          <span class="pay-upload__hint">Cliquez pour changer</span>
+        } @else {
+          <span class="material-symbols-outlined pay-upload__icon">cloud_upload</span>
+          <span class="pay-upload__text">Appuyez pour sélectionner une image</span>
+          <span class="pay-upload__hint">JPG, PNG, PDF supportés</span>
+        }
+        <input id="proofInput" type="file" accept="image/*,.pdf" (change)="onProofSelected($event)" />
+      </label>
+    </div>
+
+    <!-- Date picker -->
+    <div class="pay-field">
+      <p class="pay-field__label">Date de paiement requise</p>
+      <label class="pay-date-field">
+        <span class="material-symbols-outlined pay-date-field__icon">calendar_today</span>
+        <input
+          type="date"
+          [(ngModel)]="paymentDate"
+          name="paymentDate"
+          class="pay-date-field__input"
+          required
+        />
+      </label>
+    </div>
+
+    <!-- Notes -->
+    <div class="pay-field">
+      <p class="pay-field__label">Notes (Optionnel)</p>
+      <textarea
+        [(ngModel)]="notes"
+        name="notes"
+        class="pay-notes"
+        rows="4"
+        placeholder="Ajoutez des notes supplémentaires sur votre paiement..."
+      ></textarea>
+    </div>
+
+    @if (errorMessage()) {
+      <p class="pay-msg pay-msg--error">{{ errorMessage() }}</p>
+    }
+
+    <!-- Spacer for fixed submit button -->
+    <!-- <div style="height: 80px"></div> -->
+  </div>
+
+  <!-- Fixed submit button -->
+  <div class="btn-con" >
+    <button type="button" class="pay-submit-btn" (click)="submitPayment()" [disabled]="submitting()">
+      @if (submitting()) { <span class="pay-spinner"></span> }
+      Soumettre le paiement
+    </button>
+        <!-- <div style="height: 80px"></div> -->
+
+  </div>
+
+
+<!-- ============================================================
+     PLAN SELECTION PAGE  (default view)
+     ============================================================ -->
+} @else {
+
+  <header class="sub-topbar">
+    <button type="button" class="sub-topbar__back" (click)="goBack()">
+      <span class="material-symbols-outlined">arrow_back</span>
+    </button>
+    <span class="sub-topbar__title">Choisir un abonnement</span>
+  </header>
+
+  <div class="sub-body">
+
+    <div class="sub-intro">
+      <h1 class="sub-intro__title">Choisissez votre plan d'abonnement</h1>
+      <p class="sub-intro__sub">Sélectionnez le plan qui convient le mieux à vos besoins pour publier vos applications.</p>
+    </div>
+
+    @if (status()?.has_active_subscription) {
+      <div class="sub-active-notice">
+        <span class="material-symbols-outlined">verified</span>
+        <span>Abonnement actif — {{ status()!.plan_name }} · {{ status()!.days_remaining }} jours restants</span>
+      </div>
+    }
+
+    @if (loading()) {
+      <app-loading-spinner />
+    } @else {
       @for (pkg of packages(); track pkg.id) {
-        <div class="subscription__package" [class.subscription__package--selected]="selectedPackage()?.id === pkg.id">
+        <div
+          class="sub-card"
+          [class.sub-card--highlighted]="pkg.is_popular || pkg.is_best_value"
+          [class.sub-card--best]="pkg.is_best_value"
+        >
+          @if (pkg.discount_percent) {
+            <span class="sub-card__discount">-{{ pkg.discount_percent }}%</span>
+          }
           @if (pkg.is_popular) {
-            <span class="subscription__tag subscription__tag--popular">Populaire</span>
+            <span class="sub-card__badge">Populaire</span>
+          } @else if (pkg.is_best_value) {
+            <span class="sub-card__badge sub-card__badge--best">Meilleure valeur</span>
           }
-          @if (pkg.is_best_value) {
-            <span class="subscription__tag subscription__tag--best">Meilleure valeur</span>
-          }
-          <h3>{{ pkg.name }}</h3>
-          <p class="subscription__price">{{ pkg.price }} MRU <span>/ {{ pkg.duration_months }} mois</span></p>
-          <ul>
+
+          <div class="sub-card__head">
+            <div class="sub-card__name-col">
+              <h3 class="sub-card__name">{{ pkg.name }}</h3>
+              <p class="sub-card__desc">{{ packageDescription(pkg) }}</p>
+            </div>
+            <div class="sub-card__price-col">
+              @if (pkg.discount_percent) {
+                <span class="sub-card__original">{{ originalPrice(pkg) | number:'1.0-0' }} MRU</span>
+              }
+              <span class="sub-card__price">{{ pkg.price | number:'1.0-0' }} MRU</span>
+              <span class="sub-card__per-month">{{ pkg.price_per_month | number:'1.0-0' }} MRU/mois</span>
+            </div>
+          </div>
+
+          <ul class="sub-card__features">
             @for (feature of pkg.features; track feature) {
-              <li>{{ feature }}</li>
+              <li class="sub-card__feature">
+                <span class="material-symbols-outlined sub-card__check">check_circle</span>
+                {{ feature }}
+              </li>
             }
           </ul>
-          <button type="button" class="btn btn--primary" (click)="selectPackage(pkg)">Choisir ce forfait</button>
+
+          <button type="button" class="sub-card__btn" (click)="selectPackage(pkg)">
+            Choisir ce plan
+          </button>
         </div>
       }
-    </div>
-  }
+    }
 
-  @if (selectedPackage() && paymentInfo()) {
-    <div class="subscription__payment">
-      <h2>Paiement pour {{ selectedPackage()!.name }}</h2>
-      <div class="subscription__bank-info">
-        <p><strong>Banque :</strong> {{ paymentInfo()!.bank_name }}</p>
-        <p><strong>Compte :</strong> {{ paymentInfo()!.account_number }}</p>
-        <p><strong>Téléphone :</strong> {{ paymentInfo()!.phone }}</p>
-        <p>{{ paymentInfo()!.instructions }}</p>
-      </div>
+  </div>
+}
 
-      @if (errorMessage()) {
-        <p class="subscription__error">{{ errorMessage() }}</p>
-      }
-      @if (successMessage()) {
-        <p class="subscription__success">{{ successMessage() }}</p>
-      }
 
-      <form class="subscription__form" (ngSubmit)="submitPayment()">
-        <label>
-          Preuve de paiement *
-          <input type="file" accept="image/*,.pdf" (change)="onProofSelected($event)" />
-        </label>
 
-        <label>
-          Date du paiement *
-          <input type="date" [(ngModel)]="paymentDate" name="paymentDate" required />
-        </label>
-
-        <label>
-          Notes (optionnel)
-          <textarea [(ngModel)]="notes" name="notes" rows="3"></textarea>
-        </label>
-
-        <button type="submit" class="btn btn--primary" [disabled]="submitting()">
-          @if (submitting()) {
-            <span class="spinner-inline"></span>
-          }
-          Envoyer la preuve de paiement
-        </button>
-      </form>
-    </div>
-  }
-</section>

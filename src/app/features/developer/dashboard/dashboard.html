@@ -1,63 +1,152 @@
-<section class="container dashboard">
-  <h1>Tableau de bord</h1>
+<!-- Orange page topbar -->
+<header class="dash-topbar">
+  <span class="dash-topbar__title">Mon Tableau de Bord</span>
+</header>
 
-  @if (profile()) {
-    <div class="dashboard__profile">
-      <strong>{{ profile()!.name }}</strong>
-      <span>{{ profile()!.email }}</span>
-    </div>
-  }
+<div class="dash-body">
 
-  @if (subscriptionStatus()) {
-    <div class="dashboard__subscription" [class.dashboard__subscription--active]="subscriptionStatus()!.has_active_subscription">
-      @if (subscriptionStatus()!.has_active_subscription) {
-        <span>Abonnement actif — {{ subscriptionStatus()!.plan_name }} (expire le {{ subscriptionStatus()!.expires_at }})</span>
+  <!-- Profile card -->
+  <div class="dash-card dash-profile">
+    <div class="dash-profile__avatar">
+      @if (profile()?.avatar_url) {
+        <img [src]="resolveAssetUrl(profile()!.avatar_url!)" [alt]="profile()!.name" />
       } @else {
-        <span>Aucun abonnement actif.</span>
+        <span>{{ (profile()?.name ?? 'U').charAt(0).toUpperCase() }}</span>
       }
-      <a routerLink="/abonnement" class="btn btn--outline">Gérer l'abonnement</a>
     </div>
-  }
-
-  <div class="dashboard__header">
-    <h2>Mes applications</h2>
-    <a routerLink="/publier-une-app" class="btn btn--primary">Publier une nouvelle app</a>
+    <div class="dash-profile__info">
+      <strong class="dash-profile__name">{{ profile()?.name }}</strong>
+      <span class="dash-profile__email">{{ profile()?.email }}</span>
+      @if (profile()?.email_verified_at) {
+        <span class="dash-profile__verified">
+          <span class="material-symbols-outlined">verified</span>
+          Compte vérifié
+        </span>
+      }
+    </div>
   </div>
 
+  <!-- Subscription card -->
+  <div class="dash-card">
+    <div class="dash-section-head">
+      <span class="material-symbols-outlined dash-section-head__icon">desktop_windows</span>
+      <span class="dash-section-head__label">Statut d'abonnement</span>
+    </div>
+    @if (subscriptionStatus()?.has_active_subscription) {
+      <span class="dash-badge dash-badge--active">Abonnement actif</span>
+      <p class="dash-desc">{{ subscriptionStatus()!.plan_name }} — expire le {{ subscriptionStatus()!.expires_at }}</p>
+      <a routerLink="/abonnement" class="dash-btn dash-btn--primary">Gérer l'abonnement</a>
+    } @else {
+      <span class="dash-badge dash-badge--required">Abonnement requis</span>
+      <p class="dash-desc">Vous devez avoir un abonnement actif pour publier des applications.</p>
+      <a routerLink="/abonnement" class="dash-btn dash-btn--primary">Choisir un abonnement</a>
+    }
+  </div>
+
+  <!-- Language card -->
+  <div class="dash-card">
+    <div class="dash-section-head">
+      <span class="material-symbols-outlined dash-section-head__icon">language</span>
+      <span class="dash-section-head__label dash-section-head__label--dark">Langue</span>
+    </div>
+    <div class="dash-lang-list">
+      <button
+        type="button"
+        class="dash-lang-item"
+        [class.dash-lang-item--active]="currentLang() === 'ar'"
+        (click)="setLang('ar')"
+      >
+        <span
+          class="material-symbols-outlined dash-lang-item__globe"
+          [class.dash-lang-item__globe--active]="currentLang() === 'ar'"
+        >language</span>
+        <span class="dash-lang-item__name" [class.dash-lang-item__name--active]="currentLang() === 'ar'">العربية</span>
+        @if (currentLang() === 'ar') {
+          <span class="material-symbols-outlined dash-lang-item__check">check</span>
+        }
+      </button>
+      <button
+        type="button"
+        class="dash-lang-item"
+        [class.dash-lang-item--active]="currentLang() === 'fr'"
+        (click)="setLang('fr')"
+      >
+        <span
+          class="material-symbols-outlined dash-lang-item__globe"
+          [class.dash-lang-item__globe--active]="currentLang() === 'fr'"
+        >language</span>
+        <span class="dash-lang-item__name" [class.dash-lang-item__name--active]="currentLang() === 'fr'">Français</span>
+        @if (currentLang() === 'fr') {
+          <span class="material-symbols-outlined dash-lang-item__check">check</span>
+        }
+      </button>
+    </div>
+  </div>
+
+  <!-- Action buttons -->
+  <div class="dash-actions">
+    <a routerLink="/publier-une-app" class="dash-btn dash-btn--secondary">
+      <span class="material-symbols-outlined">add</span>
+      Publier une App
+    </a>
+    <a routerLink="/paiements" class="dash-btn dash-btn--primary">
+      <span class="material-symbols-outlined">receipt_long</span>
+      Paiements
+    </a>
+  </div>
+
+  <!-- My apps -->
   @if (loading()) {
     <app-loading-spinner />
   } @else if (myApps().length === 0) {
-    <app-empty-state message="Tu n'as encore publié aucune application." />
+    <div class="dash-empty">
+      <span class="material-symbols-outlined dash-empty__icon">grid_view</span>
+      <p class="dash-empty__title">Aucune application publiée</p>
+      <p class="dash-empty__sub">Commencez par publier votre première application</p>
+      <a routerLink="/publier-une-app" class="dash-btn dash-btn--secondary dash-btn--block">
+        <span class="material-symbols-outlined">add</span>
+        Publier une App
+      </a>
+    </div>
   } @else {
-    <div class="dashboard__list">
-      @for (app of myApps(); track app.id) {
-        <div class="dashboard__item">
-          <div class="dashboard__item-icon">
-            @if (app.icon_url) {
-              <img [src]="resolveAssetUrl(app.icon_url)" [alt]="app.app_name" />
-            } @else {
-              <span>{{ app.app_name.charAt(0) }}</span>
-            }
+    <div class="dash-card">
+      <div class="dash-section-head">
+        <span class="material-symbols-outlined dash-section-head__icon">apps</span>
+        <span class="dash-section-head__label">Mes applications</span>
+      </div>
+      <div class="dash-app-list">
+        @for (app of myApps(); track app.id) {
+          <div class="dash-app-item">
+            <div class="dash-app-item__icon">
+              @if (app.icon_url) {
+                <img [src]="resolveAssetUrl(app.icon_url)" [alt]="app.app_name" />
+              } @else {
+                <span>{{ app.app_name.charAt(0) }}</span>
+              }
+            </div>
+            <div class="dash-app-item__info">
+              <strong class="dash-app-item__name">{{ app.app_name }}</strong>
+              <span class="dash-status" [class.dash-status--approved]="app.is_approved">
+                {{ statusLabel(app) }}
+              </span>
+            </div>
+            <div class="dash-app-item__actions">
+              <a [routerLink]="['/publier-une-app', app.id]" class="dash-icon-btn">
+                <span class="material-symbols-outlined">edit</span>
+              </a>
+              <button
+                type="button"
+                class="dash-icon-btn dash-icon-btn--danger"
+                [disabled]="deletingId() === app.id"
+                (click)="deleteApp(app)"
+              >
+                <span class="material-symbols-outlined">delete</span>
+              </button>
+            </div>
           </div>
-          <div class="dashboard__item-body">
-            <strong>{{ app.app_name }}</strong>
-            <span class="dashboard__status" [class.dashboard__status--approved]="app.is_approved">
-              {{ statusLabel(app) }}
-            </span>
-          </div>
-          <div class="dashboard__item-actions">
-            <a [routerLink]="['/publier-une-app', app.id]" class="btn btn--outline">Modifier</a>
-            <button
-              type="button"
-              class="btn btn--danger"
-              [disabled]="deletingId() === app.id"
-              (click)="deleteApp(app)"
-            >
-              Supprimer
-            </button>
-          </div>
-        </div>
-      }
+        }
+      </div>
     </div>
   }
-</section>
+
+</div>

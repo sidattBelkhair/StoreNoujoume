@@ -1,76 +1,327 @@
 @use '../../../shared-styles/variables' as *;
+@use 'sass:color';
 
-.dashboard {
-  padding: 32px 16px;
+// ---- Orange page topbar (matches mobile "Mon Tableau de Bord") ----
+.dash-topbar {
+  background-color: $color-primary;
+  padding: 14px 16px;
+  position: sticky;
+  top: 56px; // below shell mobile topbar
+  z-index: 50;
 
-  h1 {
-    margin: 0 0 20px;
+  @media (min-width: $breakpoint-desktop) {
+    top: 0;
   }
 
-  &__profile {
+  &__title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: $color-white;
+  }
+}
+
+// ---- Page body ----
+.dash-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 640px;
+  margin: 0 auto;
+
+  @media (min-width: $breakpoint-desktop) {
+    padding: 24px 32px;
+    max-width: 720px;
+  }
+}
+
+// ---- Shared card ----
+.dash-card {
+  background-color: $color-white;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.07);
+}
+
+// ---- Profile card ----
+.dash-profile {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  &__avatar {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background-color: $color-primary;
+    color: $color-white;
+    font-size: 1.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__info {
     display: flex;
     flex-direction: column;
-    background-color: $color-white;
-    border-radius: $radius;
-    padding: 16px;
-    margin-bottom: 16px;
+    gap: 2px;
+    min-width: 0;
   }
 
-  &__subscription {
+  &__name {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: $color-text;
+  }
+
+  &__email {
+    font-size: 0.82rem;
+    color: $color-text-muted;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__verified {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 12px;
-    background-color: rgba(217, 52, 43, 0.08);
-    border-radius: $radius;
-    padding: 16px;
-    margin-bottom: 24px;
+    gap: 4px;
+    color: $color-secondary;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top: 2px;
+
+    .material-symbols-outlined {
+      font-size: 16px;
+      font-variation-settings: 'FILL' 1;
+    }
+  }
+}
+
+// ---- Section heading (icon + label) ----
+.dash-section-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+
+  &__icon {
+    color: $color-primary;
+    font-size: 22px;
+    font-variation-settings: 'FILL' 0;
+  }
+
+  &__label {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: $color-primary;
+  }
+}
+
+// ---- Status badge pills ----
+.dash-badge {
+  display: inline-block;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+
+  &--required {
+    background-color: $color-danger;
+    color: $color-white;
+  }
+
+  &--active {
+    background-color: $color-secondary;
+    color: $color-white;
+  }
+}
+
+// ---- Description text ----
+.dash-desc {
+  margin: 0 0 14px;
+  font-size: 0.85rem;
+  color: $color-text-muted;
+  line-height: 1.5;
+}
+
+// ---- Buttons ----
+.dash-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 13px 18px;
+  border-radius: 30px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 0.15s;
+
+  &:active { opacity: 0.85; }
+
+  .material-symbols-outlined {
+    font-size: 18px;
+  }
+
+  &--primary {
+    background-color: $color-primary;
+    color: $color-white;
+    width: 100%;
+  }
+
+  &--secondary {
+    background-color: $color-secondary;
+    color: $color-white;
+  }
+
+  &--block {
+    width: 100%;
+  }
+}
+
+// ---- Section heading dark variant (Langue uses black label not orange) ----
+.dash-section-head__label--dark {
+  color: $color-text;
+}
+
+// ---- Language selector ----
+.dash-lang-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dash-lang-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1.5px solid rgba(0, 0, 0, 0.08);
+  background: $color-white;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: border-color 0.15s;
+
+  &--active {
+    border-color: $color-primary;
+  }
+
+  &__globe {
+    font-size: 20px;
+    color: $color-text-muted;
+    font-variation-settings: 'FILL' 0;
+    flex-shrink: 0;
 
     &--active {
-      background-color: rgba(63, 143, 79, 0.1);
+      color: $color-primary;
     }
   }
 
-  &__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 16px;
+  &__name {
+    flex: 1;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: $color-text;
 
-    h2 {
-      margin: 0;
+    &--active {
+      color: $color-primary;
+      font-weight: 600;
     }
   }
 
-  &__list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+  &__check {
+    font-size: 20px;
+    color: $color-primary;
+    font-variation-settings: 'FILL' 0;
+    flex-shrink: 0;
+  }
+}
+
+// ---- Side-by-side action buttons ----
+.dash-actions {
+  display: flex;
+  gap: 10px;
+
+  .dash-btn {
+    flex: 1;
+  }
+}
+
+// ---- Empty state ----
+.dash-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 16px 16px;
+  gap: 6px;
+
+  &__icon {
+    font-size: 56px;
+    color: rgba(0, 0, 0, 0.2);
+    font-variation-settings: 'FILL' 0;
+    margin-bottom: 6px;
   }
 
-  &__item {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    background-color: $color-white;
-    border-radius: $radius;
-    padding: 12px 16px;
-    flex-wrap: wrap;
+  &__title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: $color-text;
   }
 
-  &__item-icon {
+  &__sub {
+    margin: 0 0 16px;
+    font-size: 0.82rem;
+    color: $color-text-muted;
+    text-align: center;
+  }
+}
+
+// ---- App list (when apps exist) ----
+.dash-app-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.dash-app-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+
+  &:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  &__icon {
     width: 48px;
     height: 48px;
-    border-radius: $radius;
+    border-radius: 12px;
     background-color: $color-cream;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    flex-shrink: 0;
     font-weight: 700;
+    font-size: 1.2rem;
     color: $color-primary-dark;
 
     img {
@@ -80,54 +331,63 @@
     }
   }
 
-  &__item-body {
+  &__info {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    min-width: 160px;
+    gap: 3px;
+    min-width: 0;
   }
 
-  &__status {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: $color-warning;
-
-    &--approved {
-      color: $color-secondary;
-    }
+  &__name {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: $color-text;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  &__item-actions {
+  &__actions {
     display: flex;
-    gap: 8px;
+    gap: 4px;
+    flex-shrink: 0;
   }
 }
 
-.btn {
-  border: none;
-  padding: 10px 16px;
-  border-radius: $radius;
+.dash-status {
+  font-size: 0.75rem;
   font-weight: 600;
-  font-size: 0.875rem;
+  color: $color-warning;
 
-  &--primary {
-    background-color: $color-primary;
-    color: $color-white;
+  &--approved {
+    color: $color-secondary;
   }
+}
 
-  &--outline {
-    background-color: transparent;
-    border: 2px solid $color-primary;
-    color: $color-primary-dark;
-  }
+.dash-icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.05);
+  border: none;
+  cursor: pointer;
+  color: $color-text-muted;
+  text-decoration: none;
+  transition: background 0.15s;
+
+  &:hover { background: rgba(0, 0, 0, 0.1); }
+
+  .material-symbols-outlined { font-size: 18px; }
 
   &--danger {
-    background-color: $color-danger;
-    color: $color-white;
+    color: $color-danger;
 
     &:disabled {
-      opacity: 0.6;
+      opacity: 0.5;
       cursor: not-allowed;
     }
   }

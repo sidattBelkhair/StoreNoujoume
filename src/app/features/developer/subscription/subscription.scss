@@ -1,188 +1,702 @@
 @use '../../../shared-styles/variables' as *;
 
-.subscription {
-  padding: 32px 16px;
+// ================================================================
+//  PAYMENT PAGE STYLES
+// ================================================================
 
-  h1 {
-    margin: 0 0 20px;
-  }
+.pay-body {
+  padding: 16px 16px 0;
+  max-width: 640px;
+  margin: 0 auto;
 
-  &__status {
-    background-color: rgba(217, 52, 43, 0.08);
-    border-radius: $radius;
-    padding: 14px 18px;
-    margin-bottom: 24px;
-    font-weight: 500;
-
-    &--active {
-      background-color: rgba(63, 143, 79, 0.1);
-    }
-  }
-
-  &__packages {
-    display: grid;
-    gap: 16px;
-    grid-template-columns: 1fr;
-    margin-bottom: 32px;
-
-    @media (min-width: $breakpoint-tablet) {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  &__package {
-    position: relative;
-    background-color: $color-white;
-    border-radius: $radius;
-    padding: 20px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    border: 2px solid transparent;
-
-    &--selected {
-      border-color: $color-primary;
-    }
-
-    h3 {
-      margin: 0;
-    }
-
-    ul {
-      margin: 0;
-      padding-left: 18px;
-      flex: 1;
-      font-size: 0.875rem;
-      color: $color-text-muted;
-    }
-  }
-
-  &__tag {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    font-size: 0.7rem;
-    font-weight: 700;
-    padding: 3px 8px;
-    border-radius: 20px;
-    color: $color-white;
-
-    &--popular {
-      background-color: $color-primary;
-    }
-
-    &--best {
-      background-color: $color-secondary;
-      top: 36px;
-    }
-  }
-
-  &__price {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin: 0;
-
-    span {
-      font-size: 0.85rem;
-      font-weight: 400;
-      color: $color-text-muted;
-    }
-  }
-
-  &__payment {
-    background-color: $color-white;
-    border-radius: $radius;
-    padding: 24px;
-    max-width: 480px;
-
-    h2 {
-      margin: 0 0 16px;
-    }
-  }
-
-  &__bank-info {
-    background-color: $color-cream;
-    border-radius: $radius;
-    padding: 14px;
-    margin-bottom: 16px;
-    font-size: 0.9rem;
-
-    p {
-      margin: 4px 0;
-    }
-  }
-
-  &__error {
-    background-color: rgba(217, 52, 43, 0.1);
-    color: $color-danger;
-    padding: 10px 14px;
-    border-radius: $radius;
-    font-size: 0.9rem;
-  }
-
-  &__success {
-    background-color: rgba(63, 143, 79, 0.1);
-    color: $color-secondary;
-    padding: 10px 14px;
-    border-radius: $radius;
-    font-size: 0.9rem;
-  }
-
-  &__form {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-
-    label {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      font-size: 0.9rem;
-      font-weight: 500;
-    }
-
-    input, textarea {
-      padding: 10px 12px;
-      border-radius: $radius;
-      border: 1px solid rgba(0, 0, 0, 0.15);
-      font-family: inherit;
-    }
+  @media (min-width: $breakpoint-desktop) {
+    padding: 24px 32px 0;
+    max-width: 720px;
   }
 }
 
-.btn {
+// ---- Summary card ----
+.pay-summary {
+  background-color: rgba($color-primary, 0.1);
+  border-radius: 16px;
+  padding: 18px 16px;
+  margin-bottom: 14px;
+
+  &__title {
+    margin: 0 0 14px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: $color-primary;
+  }
+
+  &__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+    padding: 7px 0;
+    border-bottom: 1px solid rgba($color-primary, 0.12);
+
+    &:last-child { border-bottom: none; }
+  }
+
+  &__label {
+    font-size: 0.88rem;
+    color: $color-text;
+    font-weight: 500;
+  }
+
+  &__value {
+    font-size: 0.9rem;
+    color: $color-text;
+  }
+
+  &__price {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: $color-primary;
+  }
+}
+
+// ---- Instructions card ----
+.pay-instructions {
+  background-color: $color-white;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.07);
+
+  &__head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  &__icon {
+    font-size: 20px;
+    color: $color-primary;
+    font-variation-settings: 'FILL' 1;
+  }
+
+  &__label {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: $color-primary;
+  }
+
+  &__rows {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  &__row {
+    display: flex;
+    gap: 12px;
+    padding: 9px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    font-size: 0.88rem;
+
+    &:last-child { border-bottom: none; }
+
+    span:first-child {
+      width: 44%;
+      color: $color-text;
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+
+    span:last-child {
+      color: $color-text;
+    }
+  }
+
+  &__note {
+    margin: 12px 0 0;
+    font-size: 0.82rem;
+    color: $color-text-muted;
+    line-height: 1.55;
+    padding-top: 10px;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+  }
+}
+
+// ---- Field wrapper ----
+.pay-field {
+  margin-bottom: 20px;
+
+  &__label {
+    margin: 0 0 4px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: $color-text;
+  }
+
+  &__sublabel {
+    margin: 0 0 10px;
+    font-size: 0.8rem;
+    color: $color-text-muted;
+  }
+}
+
+// ---- Upload zone ----
+.pay-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background-color: $color-cream;
+  border-radius: 14px;
+  border: 1.5px dashed rgba(0, 0, 0, 0.15);
+  padding: 36px 24px;
+  cursor: pointer;
+  text-align: center;
+
+  input[type="file"] {
+    display: none;
+  }
+
+  &__icon {
+    font-size: 48px;
+    color: rgba(0, 0, 0, 0.28);
+    font-variation-settings: 'FILL' 0;
+    margin-bottom: 4px;
+
+    &--done {
+      color: $color-secondary;
+      font-variation-settings: 'FILL' 1;
+    }
+  }
+
+  &__text {
+    font-size: 0.88rem;
+    color: $color-text;
+    font-weight: 500;
+    word-break: break-all;
+  }
+
+  &__hint {
+    font-size: 0.78rem;
+    color: $color-text-muted;
+  }
+}
+
+// ---- Date picker ----
+.pay-date-field {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: $color-white;
+  border-radius: 12px;
+  border: 1.5px solid rgba(0, 0, 0, 0.1);
+  padding: 12px 14px;
+  cursor: pointer;
+
+  &__icon {
+    font-size: 22px;
+    color: $color-primary;
+    font-variation-settings: 'FILL' 0;
+    flex-shrink: 0;
+  }
+
+  &__input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 0.92rem;
+    font-family: inherit;
+    color: $color-text;
+    background: transparent;
+    cursor: pointer;
+  }
+}
+
+// ---- Notes textarea ----
+.pay-notes {
+  width: 100%;
+  border-radius: 12px;
+  border: 1.5px solid rgba(0, 0, 0, 0.1);
+  padding: 12px 14px;
+  font-size: 0.88rem;
+  font-family: inherit;
+  color: $color-text;
+  resize: vertical;
+  outline: none;
+  background-color: $color-white;
+  box-sizing: border-box;
+
+  &::placeholder { color: rgba(0, 0, 0, 0.3); }
+  &:focus { border-color: $color-primary; }
+}
+
+// ---- Messages ----
+.pay-msg {
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  margin-bottom: 14px;
+
+  &--error {
+    background-color: rgba($color-danger, 0.1);
+    color: $color-danger;
+  }
+
+  &--success {
+    background-color: rgba($color-secondary, 0.1);
+    color: $color-secondary;
+    font-weight: 600;
+  }
+}
+
+// ---- Fixed submit bar ----
+.pay-submit-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: $color-white;
+  border-top: 1px solid rgba(0, 0, 0, 0.07);
+  padding: 10px 16px 14px;
+  z-index: 100;
+
+  @media (min-width: $breakpoint-desktop) {
+    left: 240px;
+  }
+}
+
+.btn-con{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.pay-submit-btn {
+  width: 100%;
+  padding: 18px;
+    width: 90%;
+  border-radius: 10px;
   border: none;
-  padding: 10px 18px;
-  border-radius: $radius;
-  font-weight: 600;
+  background-color: $color-primary;
+  color: $color-white;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
+  transition: opacity 0.15s;
 
-  &--primary {
-    background-color: $color-primary;
-    color: $color-white;
-  }
-
-  &:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-  }
+  &:hover { opacity: 0.9; }
+  &:disabled { opacity: 0.65; cursor: not-allowed; }
 }
 
-.spinner-inline {
+.pay-spinner {
   width: 16px;
   height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.5);
+  border: 2px solid rgba(255, 255, 255, 0.4);
   border-top-color: $color-white;
   border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+  animation: pay-spin 0.75s linear infinite;
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
+@keyframes pay-spin {
+  to { transform: rotate(360deg); }
+}
+
+// ---- Orange topbar ----
+.sub-topbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: $color-primary;
+  padding: 12px 16px;
+  position: sticky;
+  top: 56px;
+  z-index: 50;
+
+  @media (min-width: $breakpoint-desktop) {
+    top: 0;
   }
+
+  &__back {
+    background: none;
+    border: none;
+    color: $color-white;
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    cursor: pointer;
+    flex-shrink: 0;
+
+    .material-symbols-outlined { font-size: 24px; }
+  }
+
+  &__title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: $color-white;
+  }
+}
+
+// ---- Page body ----
+.sub-body {
+  padding: 24px 16px 40px;
+  max-width: 640px;
+  margin: 0 auto;
+
+  @media (min-width: $breakpoint-desktop) {
+    padding: 32px 32px 48px;
+    max-width: 720px;
+  }
+}
+
+// ---- Page intro ----
+.sub-intro {
+  margin-bottom: 24px;
+
+  &__title {
+    margin: 0 0 8px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: $color-text;
+  }
+
+  &__sub {
+    margin: 0;
+    font-size: 0.88rem;
+    color: $color-text-muted;
+    line-height: 1.55;
+  }
+}
+
+// ---- Active subscription notice ----
+.sub-active-notice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: rgba($color-secondary, 0.1);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: $color-secondary;
+
+  .material-symbols-outlined {
+    font-size: 20px;
+    font-variation-settings: 'FILL' 1;
+  }
+}
+
+// ---- Plan card ----
+.sub-card {
+  position: relative;
+  background-color: $color-white;
+  border-radius: 18px;
+  border: 2px solid transparent;
+  padding: 20px 18px 18px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  &--highlighted {
+    border-color: $color-primary;
+  }
+
+  &--best {
+    border-color: $color-secondary;
+  }
+
+  // Discount badge — top left
+  &__discount {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background-color: $color-danger;
+    color: $color-white;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    z-index: 1;
+  }
+
+  // Popular / best-value badge — top right
+  &__badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: $color-primary;
+    color: $color-white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 5px 14px;
+    border-radius: 0 16px 0 14px;
+
+    &--best {
+      background-color: $color-secondary;
+    }
+  }
+
+  // Name + price in a row
+  &__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    // leave room for top badges
+    padding-top: 10px;
+  }
+
+  &__name-col {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__name {
+    margin: 0 0 4px;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: $color-text;
+  }
+
+  &__desc {
+    margin: 0;
+    font-size: 0.8rem;
+    color: $color-text-muted;
+    line-height: 1.4;
+  }
+
+  &__price-col {
+    flex-shrink: 0;
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  &__original {
+    font-size: 0.78rem;
+    color: $color-text-muted;
+    text-decoration: line-through;
+    line-height: 1.2;
+  }
+
+  &__price {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: $color-primary;
+    line-height: 1.2;
+  }
+
+  &__per-month {
+    font-size: 0.75rem;
+    color: $color-text-muted;
+  }
+
+  // Feature list
+  &__features {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-top: 1px solid rgba(0, 0, 0, 0.07);
+    padding-top: 14px;
+  }
+
+  &__feature {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.88rem;
+    color: $color-text;
+  }
+
+  &__check {
+    font-size: 20px;
+    color: $color-secondary;
+    font-variation-settings: 'FILL' 1;
+    flex-shrink: 0;
+  }
+
+  // CTA button
+  &__btn {
+    width: 100%;
+    padding: 14px;
+    border-radius: 30px;
+    border: none;
+    background-color: $color-primary;
+    color: $color-white;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    font-family: inherit;
+
+    &:hover { opacity: 0.88; }
+    &:active { opacity: 0.75; }
+  }
+}
+
+// ---- Payment form card ----
+.sub-payment {
+  background-color: $color-white;
+  border-radius: 18px;
+  padding: 20px 18px;
+  margin-top: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+
+  &__title {
+    margin: 0 0 2px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: $color-text;
+  }
+
+  &__plan {
+    margin: 0;
+    font-size: 0.82rem;
+    color: $color-primary;
+    font-weight: 600;
+  }
+
+  &__close {
+    background: rgba(0, 0, 0, 0.06);
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+
+    .material-symbols-outlined { font-size: 18px; color: $color-text-muted; }
+  }
+}
+
+// ---- Bank info ----
+.sub-bank-info {
+  background-color: $color-cream;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+
+  &__row {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin: 0 0 6px;
+    font-size: 0.85rem;
+
+    &:last-of-type { margin-bottom: 0; }
+
+    span { color: $color-text-muted; }
+    strong { color: $color-text; }
+  }
+
+  &__instructions {
+    margin: 10px 0 0;
+    font-size: 0.8rem;
+    color: $color-text-muted;
+    line-height: 1.5;
+    border-top: 1px solid rgba(0, 0, 0, 0.07);
+    padding-top: 8px;
+  }
+}
+
+// ---- Messages ----
+.sub-msg {
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  margin: 0 0 14px;
+
+  &--error {
+    background-color: rgba($color-danger, 0.1);
+    color: $color-danger;
+  }
+
+  &--success {
+    background-color: rgba($color-secondary, 0.1);
+    color: $color-secondary;
+  }
+}
+
+// ---- Payment form ----
+.sub-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  &__label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: $color-text;
+  }
+
+  &__input {
+    padding: 11px 14px;
+    border-radius: 10px;
+    border: 1.5px solid rgba(0, 0, 0, 0.13);
+    font-family: inherit;
+    font-size: 0.9rem;
+    outline: none;
+
+    &:focus { border-color: $color-primary; }
+  }
+
+  &__submit {
+    width: 100%;
+    padding: 14px;
+    border-radius: 30px;
+    border: none;
+    background-color: $color-primary;
+    color: $color-white;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: opacity 0.15s;
+
+    &:disabled { opacity: 0.65; cursor: not-allowed; }
+  }
+}
+
+// ---- Inline spinner ----
+.sub-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: $color-white;
+  border-radius: 50%;
+  animation: sub-spin 0.75s linear infinite;
+}
+
+@keyframes sub-spin {
+  to { transform: rotate(360deg); }
 }

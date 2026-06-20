@@ -1,28 +1,84 @@
 @use '../../../shared-styles/variables' as *;
 
-.app-detail {
-  padding: 32px 16px;
+// ---- Orange sticky topbar ----
+.ad-topbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: $color-primary;
+  padding: 12px 16px;
+  position: sticky;
+  top: 56px;
+  z-index: 50;
 
-  &__header {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-bottom: 32px;
-
-    @media (min-width: $breakpoint-tablet) {
-      flex-direction: row;
-    }
+  @media (min-width: $breakpoint-desktop) {
+    top: 0;
   }
 
+  &__back {
+    background: none;
+    border: none;
+    color: $color-white;
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    cursor: pointer;
+    flex-shrink: 0;
+
+    .material-symbols-outlined { font-size: 24px; }
+  }
+
+  &__title {
+    flex: 1;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: $color-white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  &__btn {
+    background: none;
+    border: none;
+    color: $color-white;
+    display: flex;
+    align-items: center;
+    padding: 6px;
+    cursor: pointer;
+
+    .material-symbols-outlined { font-size: 22px; }
+  }
+}
+
+// ---- Page body ----
+.ad-body {
+  padding: 0 0 16px;
+  background-color: $color-white;
+}
+
+// ---- Hero ----
+.ad-hero {
+  display: flex;
+  gap: 16px;
+  padding: 20px 16px;
+  align-items: flex-start;
+
   &__icon {
-    width: 96px;
-    height: 96px;
-    border-radius: $radius;
+    width: 110px;
+    height: 110px;
+    border-radius: 20px;
     background-color: $color-cream;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
+    font-size: 2.5rem;
     font-weight: 700;
     color: $color-primary-dark;
     flex-shrink: 0;
@@ -37,168 +93,373 @@
 
   &__info {
     flex: 1;
-
-    h1 {
-      margin: 0 0 6px;
-    }
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
   }
 
-  &__badge {
-    display: inline-block;
-    background-color: $color-primary;
-    color: $color-white;
-    font-size: 0.75rem;
-    font-weight: 600;
-    padding: 3px 10px;
-    border-radius: 20px;
-    margin-bottom: 8px;
+  &__name {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: $color-text;
+    line-height: 1.3;
   }
 
   &__tagline {
+    margin: 0;
+    font-size: 0.82rem;
+    font-style: italic;
+    color: $color-text;
+    line-height: 1.4;
+  }
+
+  &__developer {
+    margin: 0;
+    font-size: 0.8rem;
     color: $color-text-muted;
-    margin: 0 0 10px;
   }
 
-  &__meta {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    font-size: 0.9rem;
-    color: $color-text-muted;
-    margin-bottom: 16px;
-  }
-
-  &__actions {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  &__gallery {
-    margin-bottom: 32px;
-  }
-
-  &__gallery-main {
-    width: 100%;
-    max-height: 420px;
-    object-fit: contain;
-    border-radius: $radius;
-    background-color: $color-cream;
-    margin-bottom: 12px;
-    cursor: zoom-in;
-  }
-
-  &__gallery-thumbs {
-    display: flex;
-    gap: 10px;
-    overflow-x: auto;
-
-    img {
-      width: 80px;
-      height: 80px;
-      object-fit: cover;
-      border-radius: 8px;
-      cursor: pointer;
-      opacity: 0.6;
-      border: 2px solid transparent;
-
-      &.active {
-        opacity: 1;
-        border-color: $color-primary;
-      }
-    }
-  }
-
-  &__section {
-    margin-bottom: 28px;
-
-    h2 {
-      margin: 0 0 10px;
-    }
-  }
-
-  &__grid {
-    display: grid;
-    gap: 16px;
-    grid-template-columns: 1fr;
-
-    @media (min-width: $breakpoint-tablet) {
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    h3 {
-      margin: 0 0 4px;
-      font-size: 1rem;
-    }
-
-    p {
-      margin: 0;
-      color: $color-text-muted;
-    }
-  }
-
-  &__developer-card {
+  &__stats {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
+    margin-top: 4px;
   }
 
-  &__developer-avatar {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    object-fit: cover;
+  &__rating {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.82rem;
+    color: $color-text-muted;
+  }
+
+  &__star {
+    color: $color-primary;
+  }
+
+  &__downloads {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 0.82rem;
+    color: $color-text-muted;
+
+    .material-symbols-outlined { font-size: 16px; }
+  }
+
+  &__pricing {
+    margin: 4px 0 0;
+    font-size: 0.85rem;
+    color: $color-secondary;
+
+    strong { font-weight: 700; }
   }
 }
 
-.btn {
-  display: inline-block;
-  padding: 10px 20px;
-  border-radius: $radius;
-  font-weight: 600;
-  border: 2px solid transparent;
+// ---- Sections ----
+.ad-section {
+  padding: 20px 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.07);
 
-  &--primary {
+  h2 {
+    margin: 0 0 16px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: $color-text;
+  }
+}
+
+// ---- Screenshots carousel ----
+.ad-screenshots {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  margin: 0 -16px;
+  padding: 0 16px;
+
+  &::-webkit-scrollbar { display: none; }
+}
+
+.ad-screenshot {
+  flex-shrink: 0;
+  width: calc(100% - 32px);
+  max-height: 340px;
+  object-fit: contain;
+  border-radius: 12px;
+  background-color: $color-cream;
+  scroll-snap-align: start;
+  cursor: zoom-in;
+
+  @media (min-width: $breakpoint-tablet) {
+    width: 48%;
+    max-height: 420px;
+  }
+
+  @media (min-width: $breakpoint-desktop) {
+    width: 32%;
+  }
+}
+
+// ---- Dot indicators ----
+.ad-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.ad-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.15);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: background-color 0.2s, width 0.2s;
+
+  &--active {
+    background-color: $color-primary;
+    width: 20px;
+    border-radius: 4px;
+  }
+}
+
+// ---- Text ----
+.ad-text {
+  margin: 0 0 12px;
+  font-size: 0.9rem;
+  color: $color-text;
+  line-height: 1.65;
+
+  &:last-child { margin-bottom: 0; }
+}
+
+// ---- Info rows (key-value table) ----
+.ad-info-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.ad-info-row {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+
+  &:last-child { border-bottom: none; }
+
+  &__label {
+    width: 38%;
+    flex-shrink: 0;
+    font-size: 0.82rem;
+    color: $color-text-muted;
+    line-height: 1.5;
+  }
+
+  &__value {
+    flex: 1;
+    font-size: 0.88rem;
+    color: $color-text;
+    line-height: 1.5;
+  }
+}
+
+// ---- Sub-label (inside section, before bullet list) ----
+.ad-sub-label {
+  margin: 16px 0 8px;
+  font-size: 0.82rem;
+  color: $color-text-muted;
+  font-weight: 500;
+}
+
+// ---- Features bullet list ----
+.ad-features {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  li {
+    font-size: 0.88rem;
+    color: $color-text;
+    line-height: 1.55;
+    padding-left: 12px;
+    position: relative;
+
+    &::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: $color-text;
+    }
+  }
+}
+
+// ---- Link ----
+.ad-link {
+  color: $color-primary;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+// ---- Developer identity card ----
+.ad-dev-identity {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+
+  &__avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
     background-color: $color-primary;
     color: $color-white;
+    font-size: 1.3rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
   }
 
-  &--secondary {
-    background-color: $color-secondary;
-    color: $color-white;
+  &__name {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: $color-text;
   }
 
-  &--outline {
-    background-color: transparent;
-    border-color: $color-primary;
-    color: $color-primary-dark;
+  &__company {
+    margin: 2px 0 0;
+    font-size: 0.82rem;
+    color: $color-text-muted;
   }
 }
 
+// ---- Inline contact buttons (inside section) ----
+.ad-contact-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  .ad-contact-btn {
+    flex: 1 1 calc(50% - 5px);
+    min-width: 120px;
+
+    &--block {
+      flex: 1 1 100%;
+    }
+  }
+}
+
+// ---- Spacer for fixed contact bar ----
+.ad-contact-spacer {
+  height: 90px;
+}
+
+// ---- Fixed contact bar ----
+.ad-contact-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: $color-white;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 10px 16px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 100;
+
+  @media (min-width: $breakpoint-desktop) {
+    left: 240px; // offset for sidebar
+  }
+
+  &__row {
+    display: flex;
+    gap: 10px;
+  }
+}
+
+.ad-contact-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 18px;
+  border-radius: 30px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border: 2px solid $color-primary;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 0.15s;
+
+  &:active { opacity: 0.8; }
+
+  .material-symbols-outlined { font-size: 18px; }
+
+  &--filled {
+    background-color: $color-primary;
+    color: $color-white;
+    flex: 1;
+  }
+
+  &--outlined {
+    background-color: $color-white;
+    color: $color-primary;
+    flex: 1;
+  }
+
+  &--block {
+    width: 100%;
+  }
+}
+
+// ---- Lightbox ----
 .lightbox {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: rgba(0, 0, 0, 0.92);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  outline: none;
 
   &__image {
     max-width: 88vw;
     max-height: 85vh;
     object-fit: contain;
+    border-radius: 8px;
   }
 
   &__close {
     position: absolute;
     top: 16px;
-    right: 20px;
-    background: none;
+    right: 16px;
+    background: rgba(255, 255, 255, 0.15);
     border: none;
     color: $color-white;
-    font-size: 1.8rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .material-symbols-outlined { font-size: 20px; }
   }
 
   &__arrow {
@@ -208,27 +469,20 @@
     background: rgba(255, 255, 255, 0.15);
     border: none;
     color: $color-white;
-    font-size: 2.5rem;
-    width: 48px;
-    height: 48px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    line-height: 1;
 
-    &:hover {
-      background: rgba(255, 255, 255, 0.3);
-    }
+    &:hover { background: rgba(255, 255, 255, 0.28); }
 
-    &--left {
-      left: 16px;
-    }
+    .material-symbols-outlined { font-size: 28px; }
 
-    &--right {
-      right: 16px;
-    }
+    &--left { left: 16px; }
+    &--right { right: 16px; }
   }
 
   &__counter {
@@ -237,7 +491,7 @@
     left: 50%;
     transform: translateX(-50%);
     color: $color-white;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     background: rgba(0, 0, 0, 0.4);
     padding: 4px 12px;
     border-radius: 20px;

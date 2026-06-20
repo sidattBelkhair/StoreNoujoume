@@ -27,7 +27,7 @@
   @if (loading()) {
     <app-loading-spinner />
   } @else if (error()) {
-    <app-empty-state [message]="error()!" icon="⚠️" />
+    <app-empty-state [message]="error()!" icon="error_outline" />
   } @else if (apps().length === 0) {
     <app-empty-state message="Aucune application ne correspond à ta recherche." />
   } @else {

@@ -2,23 +2,28 @@
   @if (app().is_featured) {
     <span class="app-card__badge">Sponsorisé</span>
   }
-  <div class="app-card__icon">
+
+  <!-- Centered app icon -->
+  <div class="app-card__icon-wrap">
     @if (app().icon_url) {
-      <img [src]="resolveAssetUrl(app().icon_url)" [alt]="app().app_name" />
+      <img
+        class="app-card__icon"
+        [src]="resolveAssetUrl(app().icon_url)"
+        [alt]="app().app_name"
+      />
     } @else {
-      <span class="app-card__icon-placeholder">{{ app().app_name.charAt(0) }}</span>
+      <div class="app-card__icon-placeholder">
+        {{ app().app_name.charAt(0) }}
+      </div>
     }
   </div>
+
+  <!-- Text -->
   <div class="app-card__body">
     <h3 class="app-card__name">{{ app().app_name }}</h3>
-    @if (app().tagline) {
-      <p class="app-card__tagline">{{ app().tagline }}</p>
+    @if (app().developer_name) {
+      <p class="app-card__developer">{{ app().developer_name }}</p>
     }
-    <div class="app-card__meta">
-      @if (app().category?.name) {
-        <span class="app-card__category">{{ app().category?.name }}</span>
-      }
-      <span class="app-card__rating">★ {{ app().rating }}</span>
-    </div>
+    <p class="app-card__desc">{{ app().description }}</p>
   </div>
 </a>

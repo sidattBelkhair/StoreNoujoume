@@ -4,17 +4,23 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   text-align: center;
-  padding: 48px 16px;
+  padding: 64px 24px;
   color: $color-text-muted;
+  min-height: 240px;
 
   &__icon {
-    font-size: 2.5rem;
-    margin-bottom: 12px;
+    font-size: 52px;
+    color: rgba(0, 0, 0, 0.2);
+    margin-bottom: 16px;
+    // filled variant for the grid icon
+    font-variation-settings: 'FILL' 1;
   }
 
   &__message {
     margin: 0;
     font-size: 1rem;
+    color: $color-text-muted;
   }
 }

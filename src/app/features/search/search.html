@@ -1,26 +1,74 @@
-<section class="container search">
-  <h1>Rechercher une application</h1>
-  <input
-    type="text"
-    placeholder="Nom, description, mot-clé..."
-    [(ngModel)]="query"
-    (ngModelChange)="onQueryChange()"
-    class="search__input"
-  />
+<!-- Orange search topbar with embedded input -->
+<div class="search-topbar">
+  <div class="search-topbar__field">
+    <input
+      #searchInput
+      type="search"
+      class="search-topbar__input"
+      placeholder="Rechercher une application..."
+      [(ngModel)]="query"
+      (ngModelChange)="onQueryChange()"
+      autocomplete="off"
+      autofocus
+    />
+    @if (query) {
+      <button type="button" class="search-topbar__clear" (click)="clearSearch()" aria-label="Effacer">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    }
+  </div>
+</div>
+
+<!-- Body -->
+<div class="search-body">
 
   @if (loading()) {
     <app-loading-spinner />
+
   } @else if (error()) {
-    <app-empty-state [message]="error()!" icon="⚠️" />
-  } @else if (!searched()) {
-    <app-empty-state message="Commence à taper pour rechercher une application." icon="🔍" />
-  } @else if (results().length === 0) {
-    <app-empty-state message="Aucun résultat pour cette recherche." />
-  } @else {
-    <div class="grid">
-      @for (app of results(); track app.id) {
-        <app-app-card [app]="app" />
-      }
+    <div class="search-hint">
+      <span class="material-symbols-outlined search-hint__icon">error_outline</span>
+      <p class="search-hint__title">{{ error() }}</p>
     </div>
+
+  } @else if (!searched()) {
+    <!-- Initial empty state -->
+    <div class="search-hint">
+      <span class="material-symbols-outlined search-hint__icon">search</span>
+      <p class="search-hint__title">Recherchez des applications mauritaniennes</p>
+      <p class="search-hint__sub">Tapez le nom d'une application, développeur ou catégorie</p>
+    </div>
+
+  } @else if (results().length === 0) {
+    <div class="search-hint">
+      <span class="material-symbols-outlined search-hint__icon">search_off</span>
+      <p class="search-hint__title">Aucun résultat</p>
+      <p class="search-hint__sub">Essayez un autre mot-clé.</p>
+    </div>
+
+  } @else {
+    <!-- Results list -->
+    <ul class="search-results">
+      @for (app of results(); track app.id) {
+        <li>
+          <a class="search-result" [routerLink]="['/apps', app.id]">
+            <div class="search-result__icon">
+              @if (app.icon_url) {
+                <img [src]="resolveAssetUrl(app.icon_url)" [alt]="app.app_name" />
+              } @else {
+                <span>{{ app.app_name.charAt(0) }}</span>
+              }
+            </div>
+            <div class="search-result__info">
+              <strong class="search-result__name">{{ app.app_name }}</strong>
+              @if (app.developer_name) {
+                <span class="search-result__developer">{{ app.developer_name }}</span>
+              }
+            </div>
+          </a>
+        </li>
+      }
+    </ul>
   }
-</section>
+
+</div>

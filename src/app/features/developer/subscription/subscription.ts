@@ -1,12 +1,13 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Location, DecimalPipe } from '@angular/common';
 import { SubscriptionService } from '../../../core/services/subscription.service';
 import { SubscriptionPackage, SubscriptionStatus, PaymentInfo } from '../../../core/models/subscription.model';
 import { LoadingSpinner } from '../../../shared/loading-spinner/loading-spinner';
 
 @Component({
   selector: 'app-subscription',
-  imports: [FormsModule, LoadingSpinner],
+  imports: [FormsModule, DecimalPipe, LoadingSpinner],
   templateUrl: './subscription.html',
   styleUrl: './subscription.scss',
 })
@@ -16,6 +17,7 @@ export class Subscription implements OnInit {
   readonly paymentInfo = signal<PaymentInfo | null>(null);
   readonly selectedPackage = signal<SubscriptionPackage | null>(null);
   readonly loading = signal(true);
+  readonly paymentInfoLoading = signal(false);
   readonly submitting = signal(false);
   readonly errorMessage = signal<string | null>(null);
   readonly successMessage = signal<string | null>(null);
@@ -24,7 +26,14 @@ export class Subscription implements OnInit {
   notes = '';
   proofFile: File | null = null;
 
-  constructor(private subscriptionService: SubscriptionService) {}
+  constructor(
+    private location: Location,
+    private subscriptionService: SubscriptionService
+  ) {}
+
+  goBack(): void {
+    this.location.back();
+  }
 
   ngOnInit(): void {
     this.subscriptionService.getStatus().subscribe({
@@ -48,11 +57,26 @@ export class Subscription implements OnInit {
     this.selectedPackage.set(pkg);
     this.successMessage.set(null);
     this.errorMessage.set(null);
+    this.paymentInfoLoading.set(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
     this.subscriptionService.getPaymentInfo().subscribe({
-      next: (res) => this.paymentInfo.set(res.data),
-      error: () => this.paymentInfo.set(null),
+      next: (res) => {
+        this.paymentInfo.set(res.data);
+        this.paymentInfoLoading.set(false);
+      },
+      error: () => {
+        this.paymentInfo.set(null);
+        this.paymentInfoLoading.set(false);
+      },
     });
+  }
+
+  cancelSelection(): void {
+    this.selectedPackage.set(null);
+    this.paymentInfo.set(null);
+    this.errorMessage.set(null);
+    this.successMessage.set(null);
   }
 
   onProofSelected(event: Event): void {
@@ -84,5 +108,17 @@ export class Subscription implements OnInit {
         this.errorMessage.set(err?.error?.message || 'La soumission du paiement a échoué.');
       },
     });
+  }
+
+  originalPrice(pkg: SubscriptionPackage): number {
+    if (!pkg.discount_percent) return pkg.price;
+    return Math.round(pkg.price / (1 - pkg.discount_percent / 100));
+  }
+
+  packageDescription(pkg: SubscriptionPackage): string {
+    if (pkg.duration_months === 1) return 'Abonnement mensuel pour publier vos applications';
+    if (pkg.duration_months === 3) return 'Abonnement trimestriel avec réduction';
+    if (pkg.duration_months >= 12) return 'Abonnement annuel avec la meilleure valeur';
+    return `Abonnement ${pkg.duration_months} mois`;
   }
 }

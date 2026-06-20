@@ -1,26 +1,17 @@
-<!-- Category header banner -->
-@if (category()) {
-  <div class="cat-banner" [style.background-color]="category()!.color || null">
-    <div class="container cat-banner__inner">
-      <div class="cat-banner__icon">
-        <span class="material-symbols-outlined">{{ category()!.icon || 'apps' }}</span>
-      </div>
-      <div class="cat-banner__text">
-        <h1 class="cat-banner__name">{{ category()!.name }}</h1>
-        @if (category()!.description) {
-          <p class="cat-banner__desc">{{ category()!.description }}</p>
-        }
-        <span class="cat-banner__count">{{ category()!.apps_count }} application{{ category()!.apps_count === 1 ? '' : 's' }}</span>
-      </div>
-    </div>
-  </div>
-}
+<!-- Orange top bar matching mobile: back + category name -->
+<header class="cat-topbar">
+  <button class="cat-topbar__back" type="button" (click)="goBack()">
+    <span class="material-symbols-outlined">arrow_back</span>
+  </button>
+  <span class="cat-topbar__title">{{ category()?.name ?? 'Catégorie' }}</span>
+</header>
 
+<!-- Apps content -->
 <section class="container category-apps">
   @if (loading()) {
     <app-loading-spinner />
   } @else if (error()) {
-    <app-empty-state [message]="error()!" icon="⚠️" />
+    <app-empty-state [message]="error()!" icon="error_outline" />
   } @else if (apps().length === 0) {
     <app-empty-state message="Aucune application dans cette catégorie." />
   } @else {

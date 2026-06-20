@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { CategoryService } from '../../../core/services/category.service';
 import { AppCategory, NoujoumApp } from '../../../core/models/app.model';
@@ -23,8 +24,13 @@ export class CategoryDetail implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
+    private location: Location,
     private categoryService: CategoryService
   ) {}
+
+  goBack(): void {
+    this.location.back();
+  }
 
   ngOnInit(): void {
     // Use paramMap observable so navigating /categories/1 → /categories/2
