@@ -10,6 +10,14 @@ import { LoadingSpinner } from '../../../shared/loading-spinner/loading-spinner'
 import { EmptyState } from '../../../shared/empty-state/empty-state';
 import { Pagination } from '../../../shared/pagination/pagination';
 
+// L'API GET /apps ignore le paramètre category_id (bug backend confirmé par
+// curl le 21/06/2026 : category_id=10 et category_id=6 renvoient les mêmes
+// apps). En attendant le correctif côté Laravel, on récupère toutes les apps
+// correspondant à la recherche/au tri (ça, le backend le fait correctement)
+// et on filtre + paginate par catégorie côté client.
+const CLIENT_PAGE_SIZE = 12;
+const FETCH_ALL_PER_PAGE = 200;
+
 @Component({
   selector: 'app-app-list',
   imports: [FormsModule, AppCard, LoadingSpinner, EmptyState, Pagination],
@@ -28,6 +36,10 @@ export class AppList implements OnInit {
   categoryId: number | null = null;
   sort: 'recent' | 'downloads' | 'rating' = 'recent';
 
+  // Résultat brut du backend pour la recherche/tri courants, avant filtre
+  // catégorie (appliqué côté client).
+  private allApps: NoujoumApp[] = [];
+
   private searchSubject = new Subject<string>();
 
   constructor(
@@ -41,10 +53,7 @@ export class AppList implements OnInit {
       error: () => this.categories.set([]),
     });
 
-    this.searchSubject.pipe(debounceTime(400)).subscribe(() => {
-      this.currentPage.set(1);
-      this.fetchApps();
-    });
+    this.searchSubject.pipe(debounceTime(400)).subscribe(() => this.fetchApps());
 
     this.fetchApps();
   }
@@ -53,14 +62,19 @@ export class AppList implements OnInit {
     this.searchSubject.next(this.search);
   }
 
-  onFilterChange(): void {
-    this.currentPage.set(1);
+  // Catégorie : filtrée côté client, pas besoin de re-fetch.
+  onCategoryChange(): void {
+    this.applyClientFilters(true);
+  }
+
+  // Tri : géré par le backend, donc on re-fetch.
+  onSortChange(): void {
     this.fetchApps();
   }
 
   onPageChange(page: number): void {
     this.currentPage.set(page);
-    this.fetchApps();
+    this.applyClientFilters();
   }
 
   private fetchApps(): void {
@@ -68,16 +82,14 @@ export class AppList implements OnInit {
     this.error.set(null);
     this.appService
       .getAll({
-        page: this.currentPage(),
+        per_page: FETCH_ALL_PER_PAGE,
         search: this.search || undefined,
-        category_id: this.categoryId ?? undefined,
         sort: this.sort,
       })
       .subscribe({
         next: (res) => {
-          const page = unwrapPage(res.data);
-          this.apps.set(page.items);
-          this.lastPage.set(page.lastPage);
+          this.allApps = unwrapPage(res.data).items;
+          this.applyClientFilters(true);
           this.loading.set(false);
         },
         error: () => {
@@ -85,5 +97,19 @@ export class AppList implements OnInit {
           this.loading.set(false);
         },
       });
+  }
+
+  private applyClientFilters(resetPage = false): void {
+    const filtered =
+      this.categoryId == null
+        ? this.allApps
+        : this.allApps.filter((app) => app.category_id === this.categoryId);
+
+    const lastPage = Math.max(1, Math.ceil(filtered.length / CLIENT_PAGE_SIZE));
+    const page = resetPage ? 1 : Math.min(this.currentPage(), lastPage);
+
+    this.currentPage.set(page);
+    this.lastPage.set(lastPage);
+    this.apps.set(filtered.slice((page - 1) * CLIENT_PAGE_SIZE, page * CLIENT_PAGE_SIZE));
   }
 }

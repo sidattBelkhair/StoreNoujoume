@@ -121,6 +121,13 @@
     color: $color-text-muted;
   }
 
+  &__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 2px;
+  }
+
   &__stats {
     display: flex;
     align-items: center;
@@ -156,6 +163,31 @@
     color: $color-secondary;
 
     strong { font-weight: 700; }
+  }
+}
+
+// ---- Badges (sponsorisé / vérifiée) ----
+.ad-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+
+  .material-symbols-outlined {
+    font-size: 14px;
+  }
+
+  &--sponsor {
+    background-color: rgba($color-primary, 0.14);
+    color: $color-primary-dark;
+  }
+
+  &--verified {
+    background-color: rgba($color-secondary, 0.14);
+    color: $color-secondary;
   }
 }
 

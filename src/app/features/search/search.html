@@ -19,6 +19,30 @@
   </div>
 </div>
 
+<!-- Filtres avancés : catégorie, secteur d'activité, type d'application -->
+<div class="search-filters">
+  <select [(ngModel)]="categoryId" (ngModelChange)="onFilterChange()">
+    <option [ngValue]="null">Toutes les catégories</option>
+    @for (category of categories(); track category.id) {
+      <option [ngValue]="category.id">{{ category.name }}</option>
+    }
+  </select>
+
+  <select [(ngModel)]="sector" (ngModelChange)="onFilterChange()">
+    <option [ngValue]="null">Tous les secteurs</option>
+    @for (sectorOption of businessSectors; track sectorOption) {
+      <option [ngValue]="sectorOption">{{ sectorOption }}</option>
+    }
+  </select>
+
+  <select [(ngModel)]="appType" (ngModelChange)="onFilterChange()">
+    <option [ngValue]="null">Tous les types</option>
+    @for (type of appTypes; track type.value) {
+      <option [ngValue]="type.value">{{ type.label }}</option>
+    }
+  </select>
+</div>
+
 <!-- Body -->
 <div class="search-body">
 

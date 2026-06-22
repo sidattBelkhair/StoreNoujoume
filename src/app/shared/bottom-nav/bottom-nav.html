@@ -11,11 +11,19 @@
     <span class="material-symbols-outlined">search</span>
     <span class="bottom-nav__label">Rechercher</span>
   </a>
+  <a routerLink="/publier-une-app" routerLinkActive="active" class="bottom-nav__item">
+    <span class="material-symbols-outlined">upload</span>
+    <span class="bottom-nav__label">Publier</span>
+  </a>
   @if (authService.isAuthenticated()) {
     <a routerLink="/tableau-de-bord" routerLinkActive="active" class="bottom-nav__item">
       <span class="material-symbols-outlined">person</span>
       <span class="bottom-nav__label">Profil</span>
     </a>
+    <button type="button" class="bottom-nav__item" (click)="logout()">
+      <span class="material-symbols-outlined">logout</span>
+      <span class="bottom-nav__label">Sortir</span>
+    </button>
   } @else {
     <a routerLink="/connexion" routerLinkActive="active" class="bottom-nav__item">
       <span class="material-symbols-outlined">person</span>

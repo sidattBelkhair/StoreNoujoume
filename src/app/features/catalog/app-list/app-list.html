@@ -10,14 +10,14 @@
       class="app-list__search"
     />
 
-    <select [(ngModel)]="categoryId" (ngModelChange)="onFilterChange()">
+    <select [(ngModel)]="categoryId" (ngModelChange)="onCategoryChange()">
       <option [ngValue]="null">Toutes les catégories</option>
       @for (category of categories(); track category.id) {
         <option [ngValue]="category.id">{{ category.name }}</option>
       }
     </select>
 
-    <select [(ngModel)]="sort" (ngModelChange)="onFilterChange()">
+    <select [(ngModel)]="sort" (ngModelChange)="onSortChange()">
       <option value="recent">Plus récentes</option>
       <option value="downloads">Plus téléchargées</option>
       <option value="rating">Meilleures notes</option>

@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
+import { Meta, Title } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { CategoryService } from '../../../core/services/category.service';
 import { AppCategory, NoujoumApp } from '../../../core/models/app.model';
@@ -25,7 +26,9 @@ export class CategoryDetail implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private location: Location,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private titleService: Title,
+    private metaService: Meta
   ) {}
 
   goBack(): void {
@@ -56,6 +59,7 @@ export class CategoryDetail implements OnInit, OnDestroy {
           this.category.set(res.data);
           this.apps.set(res.data.apps ?? []);
           this.loading.set(false);
+          this.updateSeoTags(res.data);
         },
         error: () => {
           this.error.set('Impossible de charger la catégorie.');
@@ -67,5 +71,16 @@ export class CategoryDetail implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.routeSub?.unsubscribe();
+  }
+
+  // Référencement naturel (cahier des charges section 22).
+  private updateSeoTags(category: AppCategory): void {
+    const title = `${category.name} - Noujoum Store`;
+    const description = (category.description || `Applications mauritaniennes dans la catégorie ${category.name}.`).slice(0, 160);
+
+    this.titleService.setTitle(title);
+    this.metaService.updateTag({ name: 'description', content: description });
+    this.metaService.updateTag({ property: 'og:title', content: title });
+    this.metaService.updateTag({ property: 'og:description', content: description });
   }
 }

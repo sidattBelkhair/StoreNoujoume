@@ -1,6 +1,7 @@
 import { Component, OnInit, signal, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
+import { Meta, Title } from '@angular/platform-browser';
 import { AppService } from '../../../core/services/app.service';
 import { NoujoumApp } from '../../../core/models/app.model';
 import { LoadingSpinner } from '../../../shared/loading-spinner/loading-spinner';
@@ -28,7 +29,9 @@ export class AppDetail implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private location: Location,
-    private appService: AppService
+    private appService: AppService,
+    private titleService: Title,
+    private metaService: Meta
   ) {}
 
   goBack(): void {
@@ -46,12 +49,31 @@ export class AppDetail implements OnInit {
       next: (res) => {
         this.app.set(res.data);
         this.loading.set(false);
+        this.updateSeoTags(res.data);
       },
       error: () => {
         this.error.set('Impossible de charger cette application.');
         this.loading.set(false);
       },
     });
+  }
+
+  // Référencement naturel (cahier des charges section 22) : chaque fiche
+  // application doit avoir un titre, une description et une image indexables.
+  private updateSeoTags(app: NoujoumApp): void {
+    const title = `${app.app_name} - Noujoum Store`;
+    const description = (app.tagline || app.description || '').slice(0, 160);
+    const image = app.icon_url ? resolveAssetUrl(app.icon_url) : '';
+
+    this.titleService.setTitle(title);
+    this.metaService.updateTag({ name: 'description', content: description });
+    this.metaService.updateTag({ name: 'keywords', content: (app.tags ?? []).join(', ') });
+    this.metaService.updateTag({ property: 'og:title', content: title });
+    this.metaService.updateTag({ property: 'og:description', content: description });
+    if (image) {
+      this.metaService.updateTag({ property: 'og:image', content: image });
+    }
+    this.metaService.updateTag({ property: 'og:url', content: window.location.href });
   }
 
   scrollToShot(index: number): void {

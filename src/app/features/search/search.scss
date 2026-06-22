@@ -51,6 +51,27 @@
   }
 }
 
+// ---- Filtres avancés (catégorie, secteur, type) ----
+.search-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 12px 0;
+
+  @media (min-width: $breakpoint-tablet) {
+    flex-direction: row;
+  }
+
+  select {
+    flex: 1;
+    padding: 9px 12px;
+    border-radius: $radius;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    background-color: $color-white;
+    font-size: 0.85rem;
+  }
+}
+
 // ---- Page body ----
 .search-body {
   min-height: 60vh;

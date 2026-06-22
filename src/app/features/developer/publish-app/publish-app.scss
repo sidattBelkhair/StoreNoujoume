@@ -47,7 +47,7 @@
       opacity: 1;
 
       .publish__step-number {
-        background-color: $color-primary;
+        background-color: $color-secondary;
         color: $color-white;
       }
     }
@@ -173,7 +173,7 @@
   gap: 8px;
 
   &--primary {
-    background-color: $color-primary;
+    background-color: $color-secondary;
     color: $color-white;
     margin-left: auto;
   }

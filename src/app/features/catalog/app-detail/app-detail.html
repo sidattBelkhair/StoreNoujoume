@@ -41,6 +41,22 @@
         @if (app()!.developer_name) {
           <p class="ad-hero__developer">{{ app()!.developer_name }}</p>
         }
+        @if (app()!.is_featured || app()!.is_verified) {
+          <div class="ad-hero__badges">
+            @if (app()!.is_featured) {
+              <span class="ad-badge ad-badge--sponsor">
+                <span class="material-symbols-outlined">workspace_premium</span>
+                Sponsorisé
+              </span>
+            }
+            @if (app()!.is_verified) {
+              <span class="ad-badge ad-badge--verified">
+                <span class="material-symbols-outlined">verified</span>
+                Vérifiée
+              </span>
+            }
+          </div>
+        }
         <div class="ad-hero__stats">
           <span class="ad-hero__rating">
             <span class="ad-hero__star">★</span>
