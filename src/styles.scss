@@ -48,3 +48,116 @@ input, select, textarea {
   -webkit-font-feature-settings: 'liga';
   -webkit-font-smoothing: antialiased;
 }
+
+/* ── RTL / Arabic layout ─────────────────────────────────────── */
+[dir="rtl"] {
+  font-family: 'Noto Sans Arabic', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  text-align: right;
+
+  /* Flip flex rows */
+  .sidebar__nav,
+  .sidebar__footer,
+  .quick-actions,
+  .dash-actions,
+  .dash-section-head,
+  .dash-profile,
+  .dash-app-item,
+  .dash-app-item__actions,
+  .ad-topbar,
+  .ad-topbar__actions,
+  .ad-hero,
+  .ad-contact-bar__row,
+  .ad-contact-buttons,
+  .bottom-nav,
+  .footer__inner,
+  .footer__links,
+  .auth__card,
+  .pay-summary__row,
+  .pay-instructions__row,
+  .search-filters,
+  .app-list__filters,
+  .sub-card__head,
+  .payment-history__item {
+    direction: rtl;
+  }
+
+  /* Back arrows flip to forward arrows in RTL */
+  .ad-topbar__back .material-symbols-outlined,
+  .sub-topbar__back .material-symbols-outlined,
+  .cat-topbar__back .material-symbols-outlined {
+    transform: scaleX(-1);
+  }
+
+  /* Sidebar moves to the right */
+  .sidebar {
+    left: auto;
+    right: 0;
+    border-right: none;
+    border-left: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  /* Desktop: shell body offset and fixed bars shift to the right (sidebar side) */
+  @media (min-width: $breakpoint-desktop) {
+    .shell-body {
+      margin-left: 0;
+      margin-right: 240px;
+    }
+
+    .ad-contact-bar,
+    .pay-submit-bar {
+      left: 0;
+      right: 240px;
+    }
+  }
+
+  /* Input placeholders align right */
+  input, textarea, select {
+    text-align: right;
+  }
+
+  /* Search field: flip asymmetric padding so icon is on the right */
+  .search-topbar__field {
+    padding: 0 12px 0 4px;
+  }
+
+  /* App detail bullet list */
+  .ad-features li {
+    padding-left: 0;
+    padding-right: 12px;
+
+    &::before {
+      left: auto;
+      right: 0;
+    }
+  }
+
+  /* Subscription plan card: discount badge flips to top-right */
+  .sub-card__discount {
+    left: auto;
+    right: 14px;
+  }
+
+  /* Subscription plan card: popular badge flips to top-left */
+  .sub-card__badge {
+    right: auto;
+    left: 0;
+    border-radius: 16px 0 14px 0;
+  }
+
+  /* Price column aligns to the start (left physically) in RTL */
+  .sub-card__price-col {
+    text-align: left;
+    align-items: flex-start;
+  }
+
+  /* Language selector */
+  .dash-lang-item {
+    text-align: right;
+  }
+
+  /* Payment history amount pushes to the start */
+  .payment-history__amount {
+    margin-left: 0;
+    margin-right: auto;
+  }
+}

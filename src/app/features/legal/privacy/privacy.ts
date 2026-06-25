@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import { TranslatePipe } from '../../../core/pipes/translate.pipe';
 
 @Component({
   selector: 'app-privacy',
-  imports: [],
+  imports: [TranslatePipe],
   templateUrl: './privacy.html',
   styleUrl: './privacy.scss',
 })

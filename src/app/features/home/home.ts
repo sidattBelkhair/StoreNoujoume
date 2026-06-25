@@ -6,10 +6,11 @@ import { NoujoumApp, AppCategory } from '../../core/models/app.model';
 import { AppCard } from '../../shared/app-card/app-card';
 import { CategoryCard } from '../../shared/category-card/category-card';
 import { LoadingSpinner } from '../../shared/loading-spinner/loading-spinner';
+import { TranslatePipe } from '../../core/pipes/translate.pipe';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, AppCard, CategoryCard, LoadingSpinner],
+  imports: [RouterLink, AppCard, CategoryCard, LoadingSpinner, TranslatePipe],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })

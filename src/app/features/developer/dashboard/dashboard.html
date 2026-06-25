@@ -1,6 +1,6 @@
 <!-- Orange page topbar -->
 <header class="dash-topbar">
-  <span class="dash-topbar__title">Mon Tableau de Bord</span>
+  <span class="dash-topbar__title">{{ 'dashboard.title' | translate }}</span>
 </header>
 
 <div class="dash-body">
@@ -20,7 +20,7 @@
       @if (profile()?.email_verified_at) {
         <span class="dash-profile__verified">
           <span class="material-symbols-outlined">verified</span>
-          Compte vérifié
+          {{ 'dashboard.verified' | translate }}
         </span>
       }
     </div>
@@ -30,16 +30,16 @@
   <div class="dash-card">
     <div class="dash-section-head">
       <span class="material-symbols-outlined dash-section-head__icon">desktop_windows</span>
-      <span class="dash-section-head__label">Statut d'abonnement</span>
+      <span class="dash-section-head__label">{{ 'dashboard.subStatus' | translate }}</span>
     </div>
     @if (subscriptionStatus()?.has_active_subscription) {
-      <span class="dash-badge dash-badge--active">Abonnement actif</span>
-      <p class="dash-desc">{{ subscriptionStatus()!.plan_name }} — expire le {{ subscriptionStatus()!.expires_at }}</p>
-      <a routerLink="/abonnement" class="dash-btn dash-btn--primary">Gérer l'abonnement</a>
+      <span class="dash-badge dash-badge--active">{{ 'dashboard.subActive' | translate }}</span>
+      <p class="dash-desc">{{ subscriptionStatus()!.plan_name }} — {{ 'dashboard.expire' | translate }} {{ subscriptionStatus()!.expires_at }}</p>
+      <a routerLink="/abonnement" class="dash-btn dash-btn--primary">{{ 'dashboard.manageSub' | translate }}</a>
     } @else {
-      <span class="dash-badge dash-badge--required">Abonnement requis</span>
-      <p class="dash-desc">Vous devez avoir un abonnement actif pour publier des applications.</p>
-      <a routerLink="/abonnement" class="dash-btn dash-btn--primary">Choisir un abonnement</a>
+      <span class="dash-badge dash-badge--required">{{ 'dashboard.subRequired' | translate }}</span>
+      <p class="dash-desc">{{ 'dashboard.subRequiredDesc' | translate }}</p>
+      <a routerLink="/abonnement" class="dash-btn dash-btn--primary">{{ 'dashboard.chooseSub' | translate }}</a>
     }
   </div>
 
@@ -47,38 +47,23 @@
   <div class="dash-card">
     <div class="dash-section-head">
       <span class="material-symbols-outlined dash-section-head__icon">language</span>
-      <span class="dash-section-head__label dash-section-head__label--dark">Langue</span>
+      <span class="dash-section-head__label dash-section-head__label--dark">{{ 'dashboard.language' | translate }}</span>
     </div>
     <div class="dash-lang-list">
-      <button
-        type="button"
-        class="dash-lang-item"
-        [class.dash-lang-item--active]="currentLang() === 'ar'"
-        (click)="setLang('ar')"
-      >
-        <span
-          class="material-symbols-outlined dash-lang-item__globe"
-          [class.dash-lang-item__globe--active]="currentLang() === 'ar'"
-        >language</span>
+      <button type="button" class="dash-lang-item" [class.dash-lang-item--active]="currentLang() === 'ar'" (click)="setLang('ar')">
+        <span class="material-symbols-outlined dash-lang-item__globe" [class.dash-lang-item__globe--active]="currentLang() === 'ar'">language</span>
         <span class="dash-lang-item__name" [class.dash-lang-item__name--active]="currentLang() === 'ar'">العربية</span>
-        @if (currentLang() === 'ar') {
-          <span class="material-symbols-outlined dash-lang-item__check">check</span>
-        }
+        @if (currentLang() === 'ar') { <span class="material-symbols-outlined dash-lang-item__check">check</span> }
       </button>
-      <button
-        type="button"
-        class="dash-lang-item"
-        [class.dash-lang-item--active]="currentLang() === 'fr'"
-        (click)="setLang('fr')"
-      >
-        <span
-          class="material-symbols-outlined dash-lang-item__globe"
-          [class.dash-lang-item__globe--active]="currentLang() === 'fr'"
-        >language</span>
+      <button type="button" class="dash-lang-item" [class.dash-lang-item--active]="currentLang() === 'fr'" (click)="setLang('fr')">
+        <span class="material-symbols-outlined dash-lang-item__globe" [class.dash-lang-item__globe--active]="currentLang() === 'fr'">language</span>
         <span class="dash-lang-item__name" [class.dash-lang-item__name--active]="currentLang() === 'fr'">Français</span>
-        @if (currentLang() === 'fr') {
-          <span class="material-symbols-outlined dash-lang-item__check">check</span>
-        }
+        @if (currentLang() === 'fr') { <span class="material-symbols-outlined dash-lang-item__check">check</span> }
+      </button>
+      <button type="button" class="dash-lang-item" [class.dash-lang-item--active]="currentLang() === 'en'" (click)="setLang('en')">
+        <span class="material-symbols-outlined dash-lang-item__globe" [class.dash-lang-item__globe--active]="currentLang() === 'en'">language</span>
+        <span class="dash-lang-item__name" [class.dash-lang-item__name--active]="currentLang() === 'en'">English</span>
+        @if (currentLang() === 'en') { <span class="material-symbols-outlined dash-lang-item__check">check</span> }
       </button>
     </div>
   </div>
@@ -87,11 +72,11 @@
   <div class="dash-actions">
     <a routerLink="/publier-une-app" class="dash-btn dash-btn--secondary">
       <span class="material-symbols-outlined">add</span>
-      Publier une App
+      {{ 'dashboard.publish' | translate }}
     </a>
     <a routerLink="/paiements" class="dash-btn dash-btn--primary">
       <span class="material-symbols-outlined">receipt_long</span>
-      Paiements
+      {{ 'dashboard.payments' | translate }}
     </a>
   </div>
 
@@ -101,18 +86,18 @@
   } @else if (myApps().length === 0) {
     <div class="dash-empty">
       <span class="material-symbols-outlined dash-empty__icon">grid_view</span>
-      <p class="dash-empty__title">Aucune application publiée</p>
-      <p class="dash-empty__sub">Commencez par publier votre première application</p>
+      <p class="dash-empty__title">{{ 'dashboard.noAppsTitle' | translate }}</p>
+      <p class="dash-empty__sub">{{ 'dashboard.noAppsSub' | translate }}</p>
       <a routerLink="/publier-une-app" class="dash-btn dash-btn--secondary dash-btn--block">
         <span class="material-symbols-outlined">add</span>
-        Publier une App
+        {{ 'dashboard.publish' | translate }}
       </a>
     </div>
   } @else {
     <div class="dash-card">
       <div class="dash-section-head">
         <span class="material-symbols-outlined dash-section-head__icon">apps</span>
-        <span class="dash-section-head__label">Mes applications</span>
+        <span class="dash-section-head__label">{{ 'dashboard.myApps' | translate }}</span>
       </div>
       <div class="dash-app-list">
         @for (app of myApps(); track app.id) {
@@ -134,12 +119,7 @@
               <a [routerLink]="['/publier-une-app', app.id]" class="dash-icon-btn">
                 <span class="material-symbols-outlined">edit</span>
               </a>
-              <button
-                type="button"
-                class="dash-icon-btn dash-icon-btn--danger"
-                [disabled]="deletingId() === app.id"
-                (click)="deleteApp(app)"
-              >
+              <button type="button" class="dash-icon-btn dash-icon-btn--danger" [disabled]="deletingId() === app.id" (click)="deleteApp(app)">
                 <span class="material-symbols-outlined">delete</span>
               </button>
             </div>

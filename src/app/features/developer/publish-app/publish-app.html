@@ -2,108 +2,85 @@
   <app-loading-spinner />
 } @else {
   <section class="container publish">
-    <h1>Publier mon application</h1>
+    <h1>{{ 'publish.title' | translate }}</h1>
 
     <div class="publish__progress">
       @for (step of [1, 2, 3, 4]; track step) {
-        <div
-          class="publish__step"
-          [class.publish__step--active]="step === currentStep()"
-          [class.publish__step--done]="step < currentStep()"
-          (click)="goToStep(step)"
-        >
+        <div class="publish__step" [class.publish__step--active]="step === currentStep()" [class.publish__step--done]="step < currentStep()" (click)="goToStep(step)">
           <span class="publish__step-number">{{ step }}</span>
           <span class="publish__step-label">
             @switch (step) {
-              @case (1) { Informations de base }
-              @case (2) { Détails techniques }
-              @case (3) { Tarification }
-              @case (4) { Détails commerciaux }
+              @case (1) { {{ 'publish.stepBasic' | translate }} }
+              @case (2) { {{ 'publish.stepTechnical' | translate }} }
+              @case (3) { {{ 'publish.stepPricing' | translate }} }
+              @case (4) { {{ 'publish.stepCommercial' | translate }} }
             }
           </span>
         </div>
       }
     </div>
 
-    @if (errorMessage()) {
-      <p class="publish__error">{{ errorMessage() }}</p>
-    }
-    @if (stepError()) {
-      <p class="publish__error">{{ stepError() }}</p>
-    }
+    @if (errorMessage()) { <p class="publish__error">{{ errorMessage() }}</p> }
+    @if (stepError()) { <p class="publish__error">{{ stepError() }}</p> }
 
     <form class="publish__form" (ngSubmit)="currentStep() === totalSteps ? submit() : next()">
 
       @if (currentStep() === 1) {
         <div class="publish__fields">
           <label>
-            Nom de l'application *
+            {{ 'publish.appName' | translate }}
             <input type="text" [(ngModel)]="appName" name="appName" required />
           </label>
-
           <label>
-            Tagline
+            {{ 'publish.tagline' | translate }}
             <input type="text" [(ngModel)]="tagline" name="tagline" />
           </label>
-
           <label>
-            Description courte *
+            {{ 'publish.description' | translate }}
             <textarea [(ngModel)]="description" name="description" rows="3" required></textarea>
           </label>
-
           <label>
-            Catégorie *
+            {{ 'publish.category' | translate }}
             <select [(ngModel)]="categoryId" name="categoryId" required>
-              <option [ngValue]="null">Choisir une catégorie</option>
+              <option [ngValue]="null">{{ 'publish.chooseCategory' | translate }}</option>
               @for (category of categories(); track category.id) {
                 <option [ngValue]="category.id">{{ category.name }}</option>
               }
             </select>
           </label>
-
           <label>
-            Public cible *
+            {{ 'publish.target' | translate }}
             <select [(ngModel)]="targetAudience" name="targetAudience" required>
-              <option value="">Choisir</option>
+              <option value="">{{ 'publish.choose' | translate }}</option>
               @for (audience of targetAudiences; track audience) {
                 <option [value]="audience">{{ audience }}</option>
               }
             </select>
           </label>
-
           <label>
-            Sous-catégorie
+            {{ 'publish.subcategory' | translate }}
             <input type="text" [(ngModel)]="subcategory" name="subcategory" />
           </label>
-
           <label>
-            Tags (séparés par des virgules)
+            {{ 'publish.tags' | translate }}
             <input type="text" [(ngModel)]="tagsInput" name="tagsInput" />
           </label>
-
           <label>
-            Icône de l'application
+            {{ 'publish.icon' | translate }}
             <input type="file" accept="image/*" (change)="onIconSelected($event)" />
           </label>
-          @if (uploadingIcon()) {
-            <app-loading-spinner />
-          }
-          @if (iconUrl) {
-            <img [src]="resolveAssetUrl(iconUrl)" alt="Icône" class="publish__preview-icon" />
-          }
-
+          @if (uploadingIcon()) { <app-loading-spinner /> }
+          @if (iconUrl) { <img [src]="resolveAssetUrl(iconUrl)" [alt]="'publish.icon' | translate" class="publish__preview-icon" /> }
           <label>
-            Captures d'écran
+            {{ 'publish.screenshots' | translate }}
             <input type="file" accept="image/*" multiple (change)="onScreenshotsSelected($event)" />
           </label>
-          @if (uploadingScreenshots()) {
-            <app-loading-spinner />
-          }
+          @if (uploadingScreenshots()) { <app-loading-spinner /> }
           @if (screenshots.length) {
             <div class="publish__screenshots">
               @for (shot of screenshots; track shot) {
                 <div class="publish__screenshot">
-                  <img [src]="resolveAssetUrl(shot)" alt="Capture" />
+                  <img [src]="resolveAssetUrl(shot)" [alt]="'publish.screenshots' | translate" />
                   <button type="button" (click)="removeScreenshot(shot)">×</button>
                 </div>
               }
@@ -115,47 +92,33 @@
       @if (currentStep() === 2) {
         <div class="publish__fields">
           <label>
-            Type d'application *
+            {{ 'publish.appType' | translate }}
             <select [(ngModel)]="appType" name="appType" required>
-              <option value="">Choisir</option>
+              <option value="">{{ 'publish.choose' | translate }}</option>
               @for (type of appTypes; track type.value) {
                 <option [value]="type.value">{{ type.label }}</option>
               }
             </select>
           </label>
-
           <label>
-            Langues supportées * (séparées par des virgules)
-            <input
-              type="text"
-              [(ngModel)]="languagesInput"
-              name="languagesInput"
-              placeholder="ex: Français, Arabe, Anglais"
-              required
-            />
+            {{ 'publish.languages' | translate }}
+            <input type="text" [(ngModel)]="languagesInput" name="languagesInput" [placeholder]="'publish.languagesPlaceholder' | translate" required />
           </label>
-
           <fieldset>
-            <legend>Plateformes supportées</legend>
+            <legend>{{ 'publish.platforms' | translate }}</legend>
             @for (platform of platforms; track platform) {
               <label class="publish__checkbox">
-                <input
-                  type="checkbox"
-                  [checked]="supportedPlatforms.includes(platform)"
-                  (change)="togglePlatform(platform)"
-                />
+                <input type="checkbox" [checked]="supportedPlatforms.includes(platform)" (change)="togglePlatform(platform)" />
                 {{ platform }}
               </label>
             }
           </fieldset>
-
           <label>
-            Version actuelle
+            {{ 'publish.version' | translate }}
             <input type="text" [(ngModel)]="currentVersion" name="currentVersion" />
           </label>
-
           <label>
-            Exigences techniques
+            {{ 'publish.requirements' | translate }}
             <textarea [(ngModel)]="technicalRequirements" name="technicalRequirements" rows="3"></textarea>
           </label>
         </div>
@@ -164,38 +127,34 @@
       @if (currentStep() === 3) {
         <div class="publish__fields">
           <label>
-            Modèle de tarification *
+            {{ 'publish.pricingModel' | translate }}
             <select [(ngModel)]="pricingModel" name="pricingModel" required>
-              <option value="">Choisir</option>
-              <option value="free">Gratuit</option>
-              <option value="paid">Payant</option>
-              <option value="freemium">Freemium</option>
+              <option value="">{{ 'publish.choose' | translate }}</option>
+              <option value="free">{{ 'publish.free' | translate }}</option>
+              <option value="paid">{{ 'publish.paid' | translate }}</option>
+              <option value="freemium">{{ 'publish.freemium' | translate }}</option>
             </select>
           </label>
-
           <label>
-            Type de licence *
+            {{ 'publish.licenseType' | translate }}
             <select [(ngModel)]="licenseType" name="licenseType" required>
-              <option value="">Choisir</option>
+              <option value="">{{ 'publish.choose' | translate }}</option>
               @for (type of licenseTypes; track type.value) {
                 <option [value]="type.value">{{ type.label }}</option>
               }
             </select>
           </label>
-
           <label>
-            Prix *
-            <input type="text" [(ngModel)]="pricing" name="pricing" placeholder="ex: 500 MRU / mois" required />
+            {{ 'publish.price' | translate }}
+            <input type="text" [(ngModel)]="pricing" name="pricing" [placeholder]="'publish.pricePlaceholder' | translate" required />
           </label>
-
           <label class="publish__checkbox">
             <input type="checkbox" [(ngModel)]="hasFreeTrial" name="hasFreeTrial" />
-            Essai gratuit disponible
+            {{ 'publish.freeTrial' | translate }}
           </label>
-
           @if (hasFreeTrial) {
             <label>
-              Nombre de jours d'essai
+              {{ 'publish.trialDays' | translate }}
               <input type="number" [(ngModel)]="trialDays" name="trialDays" min="1" />
             </label>
           }
@@ -205,38 +164,27 @@
       @if (currentStep() === 4) {
         <div class="publish__fields">
           <label>
-            Valeur commerciale
+            {{ 'publish.businessValue' | translate }}
             <textarea [(ngModel)]="businessValue" name="businessValue" rows="3"></textarea>
           </label>
-
           <label>
-            Fonctionnalités clés (une par ligne)
+            {{ 'publish.keyFeatures' | translate }}
             <textarea [(ngModel)]="keyFeaturesInput" name="keyFeaturesInput" rows="4"></textarea>
           </label>
-
           <fieldset>
-            <legend>Secteurs d'activité</legend>
+            <legend>{{ 'publish.sectors' | translate }}</legend>
             @for (sector of businessSectors; track sector) {
               <label class="publish__checkbox">
-                <input
-                  type="checkbox"
-                  [checked]="selectedBusinessSectors.includes(sector)"
-                  (change)="toggleSector(sector)"
-                />
+                <input type="checkbox" [checked]="selectedBusinessSectors.includes(sector)" (change)="toggleSector(sector)" />
                 {{ sector }}
               </label>
             }
           </fieldset>
-
           <fieldset>
-            <legend>Options de support</legend>
+            <legend>{{ 'publish.supportOptions' | translate }}</legend>
             @for (option of supportOptionsList; track option) {
               <label class="publish__checkbox">
-                <input
-                  type="checkbox"
-                  [checked]="selectedSupportOptions.includes(option)"
-                  (change)="toggleSupportOption(option)"
-                />
+                <input type="checkbox" [checked]="selectedSupportOptions.includes(option)" (change)="toggleSupportOption(option)" />
                 {{ option }}
               </label>
             }
@@ -246,16 +194,14 @@
 
       <div class="publish__actions">
         @if (currentStep() > 1) {
-          <button type="button" class="btn btn--outline" (click)="previous()">Précédent</button>
+          <button type="button" class="btn btn--outline" (click)="previous()">{{ 'publish.previous' | translate }}</button>
         }
         @if (currentStep() < totalSteps) {
-          <button type="submit" class="btn btn--primary">Suivant</button>
+          <button type="submit" class="btn btn--primary">{{ 'publish.next' | translate }}</button>
         } @else {
           <button type="submit" class="btn btn--primary" [disabled]="loading()">
-            @if (loading()) {
-              <span class="spinner-inline"></span>
-            }
-            Publier l'application
+            @if (loading()) { <span class="spinner-inline"></span> }
+            {{ 'publish.submit' | translate }}
           </button>
         }
       </div>

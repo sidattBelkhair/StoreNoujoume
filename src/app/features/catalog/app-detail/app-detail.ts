@@ -3,14 +3,16 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { Meta, Title } from '@angular/platform-browser';
 import { AppService } from '../../../core/services/app.service';
+import { TranslationService } from '../../../core/services/translation.service';
 import { NoujoumApp } from '../../../core/models/app.model';
 import { LoadingSpinner } from '../../../shared/loading-spinner/loading-spinner';
 import { EmptyState } from '../../../shared/empty-state/empty-state';
+import { TranslatePipe } from '../../../core/pipes/translate.pipe';
 import { resolveAssetUrl } from '../../../core/utils/asset-url.util';
 
 @Component({
   selector: 'app-app-detail',
-  imports: [LoadingSpinner, EmptyState],
+  imports: [LoadingSpinner, EmptyState, TranslatePipe],
   templateUrl: './app-detail.html',
   styleUrl: './app-detail.scss',
 })
@@ -31,17 +33,16 @@ export class AppDetail implements OnInit {
     private location: Location,
     private appService: AppService,
     private titleService: Title,
-    private metaService: Meta
+    private metaService: Meta,
+    private ts: TranslationService
   ) {}
 
-  goBack(): void {
-    this.location.back();
-  }
+  goBack(): void { this.location.back(); }
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (!id) {
-      this.error.set('Application introuvable.');
+      this.error.set(this.ts.t('appDetail.notFound'));
       this.loading.set(false);
       return;
     }
@@ -52,27 +53,22 @@ export class AppDetail implements OnInit {
         this.updateSeoTags(res.data);
       },
       error: () => {
-        this.error.set('Impossible de charger cette application.');
+        this.error.set(this.ts.t('appDetail.loadError'));
         this.loading.set(false);
       },
     });
   }
 
-  // Référencement naturel (cahier des charges section 22) : chaque fiche
-  // application doit avoir un titre, une description et une image indexables.
   private updateSeoTags(app: NoujoumApp): void {
     const title = `${app.app_name} - Noujoum Store`;
     const description = (app.tagline || app.description || '').slice(0, 160);
     const image = app.icon_url ? resolveAssetUrl(app.icon_url) : '';
-
     this.titleService.setTitle(title);
     this.metaService.updateTag({ name: 'description', content: description });
     this.metaService.updateTag({ name: 'keywords', content: (app.tags ?? []).join(', ') });
     this.metaService.updateTag({ property: 'og:title', content: title });
     this.metaService.updateTag({ property: 'og:description', content: description });
-    if (image) {
-      this.metaService.updateTag({ property: 'og:image', content: image });
-    }
+    if (image) this.metaService.updateTag({ property: 'og:image', content: image });
     this.metaService.updateTag({ property: 'og:url', content: window.location.href });
   }
 
@@ -91,13 +87,8 @@ export class AppDetail implements OnInit {
     this.activeScreenshotIndex.set(Math.min(index, count - 1));
   }
 
-  openLightbox(index: number): void {
-    this.lightboxIndex.set(index);
-  }
-
-  closeLightbox(): void {
-    this.lightboxIndex.set(null);
-  }
+  openLightbox(index: number): void { this.lightboxIndex.set(index); }
+  closeLightbox(): void { this.lightboxIndex.set(null); }
 
   nextScreenshot(): void {
     const shots = this.app()?.screenshots ?? [];
@@ -126,9 +117,7 @@ export class AppDetail implements OnInit {
     });
   }
 
-  toggleFavorite(): void {
-    this.favorited.set(!this.favorited());
-  }
+  toggleFavorite(): void { this.favorited.set(!this.favorited()); }
 
   fillStyle(filled: boolean): string {
     return filled ? "'FILL' 1" : "'FILL' 0";
@@ -138,7 +127,11 @@ export class AppDetail implements OnInit {
     const app = this.app();
     if (!app) return '';
     if (app.pricing) return app.pricing;
-    const map: Record<string, string> = { free: 'Gratuit', paid: 'Payant', freemium: 'Freemium' };
+    const map: Record<string, string> = {
+      free: this.ts.t('appDetail.free'),
+      paid: this.ts.t('appDetail.paid'),
+      freemium: this.ts.t('appDetail.freemium'),
+    };
     return app.pricing_model ? (map[app.pricing_model] ?? app.pricing_model) : '';
   }
 

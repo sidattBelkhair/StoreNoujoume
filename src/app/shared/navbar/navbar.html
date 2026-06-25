@@ -3,7 +3,7 @@
   <a routerLink="/" class="topbar__brand">
     <img src="logo-transparent.png" alt="Noujoum Store" class="topbar__logo" />
   </a>
-  <a routerLink="/rechercher" class="topbar__search" aria-label="Rechercher">
+  <a routerLink="/rechercher" class="topbar__search" [attr.aria-label]="'nav.search' | translate">
     <span class="material-symbols-outlined">search</span>
   </a>
 </header>
@@ -18,19 +18,19 @@
   <nav class="sidebar__nav">
     <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="sidebar__link">
       <span class="material-symbols-outlined">home</span>
-      <span>Accueil</span>
+      <span>{{ 'nav.home' | translate }}</span>
     </a>
     <a routerLink="/categories" routerLinkActive="active" class="sidebar__link">
       <span class="material-symbols-outlined">grid_view</span>
-      <span>Catégories</span>
+      <span>{{ 'nav.categories' | translate }}</span>
     </a>
     <a routerLink="/rechercher" routerLinkActive="active" class="sidebar__link">
       <span class="material-symbols-outlined">search</span>
-      <span>Rechercher</span>
+      <span>{{ 'nav.search' | translate }}</span>
     </a>
     <a routerLink="/publier-une-app" routerLinkActive="active" class="sidebar__link">
       <span class="material-symbols-outlined">upload</span>
-      <span>Publier mon App</span>
+      <span>{{ 'nav.publish' | translate }}</span>
     </a>
   </nav>
 
@@ -42,14 +42,14 @@
         } @else {
           <span class="sidebar__avatar sidebar__avatar--placeholder">{{ authService.currentUser()?.name?.charAt(0) }}</span>
         }
-        <span>Profil</span>
+        <span>{{ 'nav.profile' | translate }}</span>
       </a>
       <button type="button" class="sidebar__link sidebar__logout" (click)="logout()">
         <span class="material-symbols-outlined">logout</span>
-        <span>Déconnexion</span>
+        <span>{{ 'nav.logout' | translate }}</span>
       </button>
     } @else {
-      <a routerLink="/connexion" class="sidebar__cta">Connexion</a>
+      <a routerLink="/connexion" class="sidebar__cta">{{ 'nav.login' | translate }}</a>
     }
   </div>
 </aside>

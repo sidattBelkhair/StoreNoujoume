@@ -4,14 +4,13 @@ import { RouterLink } from '@angular/router';
 import { Subject, Subscription, debounceTime } from 'rxjs';
 import { AppService } from '../../core/services/app.service';
 import { CategoryService } from '../../core/services/category.service';
+import { TranslationService } from '../../core/services/translation.service';
 import { AppCategory, NoujoumApp } from '../../core/models/app.model';
 import { unwrapPage } from '../../core/utils/pagination.util';
 import { LoadingSpinner } from '../../shared/loading-spinner/loading-spinner';
 import { resolveAssetUrl } from '../../core/utils/asset-url.util';
+import { TranslatePipe } from '../../core/pipes/translate.pipe';
 
-// Cahier des charges section 15 : la recherche doit aussi filtrer par
-// catégorie, secteur d'activité et type d'application (en plus du texte
-// libre, déjà géré par le backend).
 const APP_TYPES: { value: string; label: string }[] = [
   { value: 'mobile', label: 'Application mobile' },
   { value: 'web', label: 'Application web' },
@@ -25,7 +24,7 @@ const BUSINESS_SECTORS = ['Commerce', 'Services', 'Industrie', 'Santé', 'Éduca
 
 @Component({
   selector: 'app-search',
-  imports: [FormsModule, RouterLink, LoadingSpinner],
+  imports: [FormsModule, RouterLink, LoadingSpinner, TranslatePipe],
   templateUrl: './search.html',
   styleUrl: './search.scss',
 })
@@ -47,16 +46,14 @@ export class Search implements OnInit, OnDestroy {
 
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
 
-  // Résultats bruts du backend (texte libre), avant filtres catégorie/secteur/type
-  // appliqués côté client.
   private rawResults: NoujoumApp[] = [];
-
   private searchSubject = new Subject<string>();
   private sub?: Subscription;
 
   constructor(
     private appService: AppService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private ts: TranslationService
   ) {}
 
   ngOnInit(): void {
@@ -64,32 +61,21 @@ export class Search implements OnInit, OnDestroy {
       next: (res) => this.categories.set(res.data),
       error: () => this.categories.set([]),
     });
-
     this.sub = this.searchSubject.pipe(debounceTime(350)).subscribe((q) => this.runSearch(q));
   }
 
-  ngOnDestroy(): void {
-    this.sub?.unsubscribe();
-  }
+  ngOnDestroy(): void { this.sub?.unsubscribe(); }
 
   onQueryChange(): void {
     if (!this.query.trim() && !this.hasActiveFilters()) {
-      this.searched.set(false);
-      this.rawResults = [];
-      this.results.set([]);
-      return;
+      this.searched.set(false); this.rawResults = []; this.results.set([]); return;
     }
     this.searchSubject.next(this.query);
   }
 
-  // Un filtre seul (sans texte) doit aussi permettre de parcourir les apps —
-  // on relance donc la requête backend (search vide = toutes les apps).
   onFilterChange(): void {
     if (!this.query.trim() && !this.hasActiveFilters()) {
-      this.searched.set(false);
-      this.rawResults = [];
-      this.results.set([]);
-      return;
+      this.searched.set(false); this.rawResults = []; this.results.set([]); return;
     }
     this.runSearch(this.query);
   }
@@ -99,29 +85,21 @@ export class Search implements OnInit, OnDestroy {
   }
 
   clearSearch(): void {
-    this.query = '';
-    this.categoryId = null;
-    this.sector = null;
-    this.appType = null;
-    this.rawResults = [];
-    this.results.set([]);
-    this.searched.set(false);
-    this.error.set(null);
+    this.query = ''; this.categoryId = null; this.sector = null; this.appType = null;
+    this.rawResults = []; this.results.set([]); this.searched.set(false); this.error.set(null);
     this.searchInput?.nativeElement.focus();
   }
 
   private runSearch(query: string): void {
-    this.loading.set(true);
-    this.error.set(null);
+    this.loading.set(true); this.error.set(null);
     this.appService.getAll({ search: query, per_page: 100 }).subscribe({
       next: (res) => {
         this.rawResults = unwrapPage(res.data).items;
         this.applyClientFilters();
-        this.searched.set(true);
-        this.loading.set(false);
+        this.searched.set(true); this.loading.set(false);
       },
       error: () => {
-        this.error.set('La recherche a échoué. Réessaie plus tard.');
+        this.error.set(this.ts.t('search.error'));
         this.loading.set(false);
       },
     });

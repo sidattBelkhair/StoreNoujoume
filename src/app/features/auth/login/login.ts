@@ -2,10 +2,12 @@ import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { TranslationService } from '../../../core/services/translation.service';
+import { TranslatePipe } from '../../../core/pipes/translate.pipe';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, TranslatePipe],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
@@ -18,15 +20,15 @@ export class Login {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private ts: TranslationService
   ) {}
 
   submit(): void {
     if (!this.email || !this.password) {
-      this.errorMessage.set('Merci de remplir tous les champs.');
+      this.errorMessage.set(this.ts.t('login.errorFill'));
       return;
     }
-
     this.loading.set(true);
     this.errorMessage.set(null);
 
@@ -39,12 +41,10 @@ export class Login {
       error: (err) => {
         this.loading.set(false);
         const backendMessage = err?.error?.message;
-        // "Invalid credentials" couvre aussi le cas où l'inscription n'a jamais été
-        // finalisée : le compte n'existe pas tant que /verify-email n'a pas réussi.
         this.errorMessage.set(
           backendMessage
-            ? `${backendMessage} (vérifie aussi que tu as bien confirmé ton email après l'inscription)`
-            : 'Email ou mot de passe incorrect.'
+            ? `${backendMessage} (${this.ts.t('login.errorBackend')})`
+            : this.ts.t('login.errorCredentials')
         );
       },
     });

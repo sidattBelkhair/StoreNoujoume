@@ -2,10 +2,12 @@ import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { TranslationService } from '../../../core/services/translation.service';
+import { TranslatePipe } from '../../../core/pipes/translate.pipe';
 
 @Component({
   selector: 'app-verify-email',
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, TranslatePipe],
   templateUrl: './verify-email.html',
   styleUrl: './verify-email.scss',
 })
@@ -23,7 +25,8 @@ export class VerifyEmail implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private ts: TranslationService
   ) {}
 
   ngOnInit(): void {
@@ -39,53 +42,41 @@ export class VerifyEmail implements OnInit {
 
   submit(): void {
     if (!this.email || !this.code || !this.name || !this.password) {
-      this.errorMessage.set('Merci de remplir tous les champs.');
+      this.errorMessage.set(this.ts.t('verify.errorFill'));
       return;
     }
-
     this.loading.set(true);
     this.errorMessage.set(null);
     this.infoMessage.set(null);
 
-    this.authService
-      .verifyEmail({ email: this.email, code: this.code, name: this.name, password: this.password })
-      .subscribe({
-        next: () => {
-          this.loading.set(false);
-          this.router.navigate(['/connexion']);
-        },
-        error: (err) => {
-          this.loading.set(false);
-          this.errorMessage.set(this.extractErrorMessage(err, 'Code de vérification invalide.'));
-        },
-      });
+    this.authService.verifyEmail({ email: this.email, code: this.code, name: this.name, password: this.password }).subscribe({
+      next: () => { this.loading.set(false); this.router.navigate(['/connexion']); },
+      error: (err) => {
+        this.loading.set(false);
+        this.errorMessage.set(this.extractErrorMessage(err, this.ts.t('verify.errorInvalid')));
+      },
+    });
   }
 
   private extractErrorMessage(err: unknown, fallback: string): string {
     const body = (err as { error?: { message?: string; errors?: Record<string, string[]> } })?.error;
-    if (body?.errors) {
-      return Object.values(body.errors).flat().join(' ');
-    }
+    if (body?.errors) return Object.values(body.errors).flat().join(' ');
     return body?.message || fallback;
   }
 
   resend(): void {
     if (!this.email) {
-      this.errorMessage.set('Merci de renseigner ton email.');
+      this.errorMessage.set(this.ts.t('verify.emailHint'));
       return;
     }
-
     this.resending.set(true);
     this.errorMessage.set(null);
 
     this.authService.resendVerification(this.email).subscribe({
-      next: () => {
-        this.resending.set(false);
-        this.infoMessage.set('Un nouveau code a été envoyé.');
-      },
+      next: () => { this.resending.set(false); this.infoMessage.set(this.ts.t('verify.resent')); },
       error: (err) => {
         this.resending.set(false);
-        this.errorMessage.set(this.extractErrorMessage(err, 'Impossible de renvoyer le code.'));
+        this.errorMessage.set(this.extractErrorMessage(err, this.ts.t('verify.resendFailed')));
       },
     });
   }

@@ -1,26 +1,26 @@
 <section class="container app-list">
-  <h1>Toutes les applications</h1>
+  <h1>{{ 'appList.title' | translate }}</h1>
 
   <div class="app-list__filters">
     <input
       type="text"
-      placeholder="Rechercher une application..."
+      [placeholder]="'appList.searchPlaceholder' | translate"
       [(ngModel)]="search"
       (ngModelChange)="onSearchChange()"
       class="app-list__search"
     />
 
     <select [(ngModel)]="categoryId" (ngModelChange)="onCategoryChange()">
-      <option [ngValue]="null">Toutes les catégories</option>
+      <option [ngValue]="null">{{ 'appList.allCategories' | translate }}</option>
       @for (category of categories(); track category.id) {
         <option [ngValue]="category.id">{{ category.name }}</option>
       }
     </select>
 
     <select [(ngModel)]="sort" (ngModelChange)="onSortChange()">
-      <option value="recent">Plus récentes</option>
-      <option value="downloads">Plus téléchargées</option>
-      <option value="rating">Meilleures notes</option>
+      <option value="recent">{{ 'appList.sortRecent' | translate }}</option>
+      <option value="downloads">{{ 'appList.sortDownloads' | translate }}</option>
+      <option value="rating">{{ 'appList.sortRating' | translate }}</option>
     </select>
   </div>
 
@@ -29,7 +29,7 @@
   } @else if (error()) {
     <app-empty-state [message]="error()!" icon="error_outline" />
   } @else if (apps().length === 0) {
-    <app-empty-state message="Aucune application ne correspond à ta recherche." />
+    <app-empty-state [message]="'appList.empty' | translate" />
   } @else {
     <div class="grid">
       @for (app of apps(); track app.id) {

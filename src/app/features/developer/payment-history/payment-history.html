@@ -1,12 +1,12 @@
 <section class="container payment-history">
-  <h1>Historique des paiements</h1>
+  <h1>{{ 'paymentHistory.title' | translate }}</h1>
 
   @if (loading()) {
     <app-loading-spinner />
   } @else if (error()) {
     <app-empty-state [message]="error()!" icon="error_outline" />
   } @else if (transactions().length === 0) {
-    <app-empty-state message="Aucune transaction pour le moment." />
+    <app-empty-state [message]="'paymentHistory.empty' | translate" />
   } @else {
     <div class="payment-history__list">
       @for (transaction of transactions(); track transaction.id) {
@@ -20,13 +20,8 @@
             {{ statusLabel(transaction.status) }}
           </span>
           @if (transaction.status === 'pending') {
-            <button
-              type="button"
-              class="btn btn--danger"
-              [disabled]="cancellingId() === transaction.id"
-              (click)="cancel(transaction)"
-            >
-              Annuler
+            <button type="button" class="btn btn--danger" [disabled]="cancellingId() === transaction.id" (click)="cancel(transaction)">
+              {{ 'paymentHistory.cancel' | translate }}
             </button>
           }
         </div>

@@ -1,10 +1,10 @@
 <footer class="footer">
   <div class="container footer__inner">
     <nav class="footer__links">
-      <a routerLink="/conditions-utilisation">Conditions d'utilisation</a>
-      <a routerLink="/politique-confidentialite">Politique de confidentialité</a>
-      <a routerLink="/contact">Contact</a>
+      <a routerLink="/conditions-utilisation">{{ 'footer.terms' | translate }}</a>
+      <a routerLink="/politique-confidentialite">{{ 'footer.privacy' | translate }}</a>
+      <a routerLink="/contact">{{ 'footer.contact' | translate }}</a>
     </nav>
-    <p class="footer__copyright">&copy; {{ year }} Noujoum Store. Tous droits réservés.</p>
+    <p class="footer__copyright">&copy; {{ year }} Noujoum Store. {{ 'footer.rights' | translate }}</p>
   </div>
 </footer>

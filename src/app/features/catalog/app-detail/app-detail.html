@@ -13,7 +13,7 @@
     </button>
     <span class="ad-topbar__title">{{ app()!.app_name }}</span>
     <div class="ad-topbar__actions">
-      <button type="button" class="ad-topbar__btn" (click)="share()" [title]="copied() ? 'Lien copié !' : 'Partager'">
+      <button type="button" class="ad-topbar__btn" (click)="share()" [title]="copied() ? ('appDetail.copied' | translate) : ('appDetail.share' | translate)">
         <span class="material-symbols-outlined">{{ copied() ? 'check' : 'share' }}</span>
       </button>
       <button type="button" class="ad-topbar__btn" (click)="toggleFavorite()">
@@ -46,13 +46,13 @@
             @if (app()!.is_featured) {
               <span class="ad-badge ad-badge--sponsor">
                 <span class="material-symbols-outlined">workspace_premium</span>
-                Sponsorisé
+                {{ 'appDetail.sponsored' | translate }}
               </span>
             }
             @if (app()!.is_verified) {
               <span class="ad-badge ad-badge--verified">
                 <span class="material-symbols-outlined">verified</span>
-                Vérifiée
+                {{ 'appDetail.verified' | translate }}
               </span>
             }
           </div>
@@ -69,7 +69,7 @@
         </div>
         @if (app()!.pricing_model || app()!.pricing) {
           <p class="ad-hero__pricing">
-            Tarification&nbsp;: <strong>{{ pricingLabel() }}</strong>
+            {{ 'appDetail.pricing' | translate }}&nbsp;: <strong>{{ pricingLabel() }}</strong>
           </p>
         }
       </div>
@@ -78,13 +78,13 @@
     <!-- Screenshots carousel -->
     @if (app()!.screenshots?.length) {
       <section class="ad-section">
-        <h2>Captures d'écran</h2>
+        <h2>{{ 'appDetail.screenshots' | translate }}</h2>
         <div class="ad-screenshots" #screenshotsRef (scroll)="onShotScroll($event)">
           @for (shot of app()!.screenshots; track shot; let i = $index) {
             <img
               class="ad-screenshot"
               [src]="resolveAssetUrl(shot)"
-              alt="Capture d'écran"
+              [alt]="'appDetail.screenshotAlt' | translate"
               (click)="openLightbox(i)"
             />
           }
@@ -107,43 +107,43 @@
 
     <!-- Description -->
     <section class="ad-section">
-      <h2>Description</h2>
+      <h2>{{ 'appDetail.description' | translate }}</h2>
       <p class="ad-text">{{ app()!.description }}</p>
       @if (app()!.detailed_description) {
         <p class="ad-text">{{ app()!.detailed_description }}</p>
       }
     </section>
 
-    <!-- Détails techniques -->
+    <!-- Technical details -->
     @if (app()!.app_type || app()!.supported_platforms?.length || app()!.current_version || app()!.languages?.length) {
       <section class="ad-section">
-        <h2>Détails techniques</h2>
+        <h2>{{ 'appDetail.technical' | translate }}</h2>
         <div class="ad-info-list">
           @if (app()!.app_type) {
             <div class="ad-info-row">
-              <span class="ad-info-row__label">Type d'application</span>
+              <span class="ad-info-row__label">{{ 'appDetail.appType' | translate }}</span>
               <span class="ad-info-row__value">{{ app()!.app_type }}</span>
             </div>
           }
           @if (app()!.supported_platforms?.length) {
             <div class="ad-info-row">
-              <span class="ad-info-row__label">Plateformes</span>
+              <span class="ad-info-row__label">{{ 'appDetail.platforms' | translate }}</span>
               <span class="ad-info-row__value">{{ app()!.supported_platforms!.join(', ') }}</span>
             </div>
           }
           @if (app()!.current_version) {
             <div class="ad-info-row">
-              <span class="ad-info-row__label">Version actuelle</span>
+              <span class="ad-info-row__label">{{ 'appDetail.version' | translate }}</span>
               <span class="ad-info-row__value">{{ app()!.current_version }}</span>
             </div>
           }
           <div class="ad-info-row">
-            <span class="ad-info-row__label">Dernière mise à jour</span>
+            <span class="ad-info-row__label">{{ 'appDetail.lastUpdate' | translate }}</span>
             <span class="ad-info-row__value">{{ formatDate(app()!.updated_at) }}</span>
           </div>
           @if (app()!.languages?.length) {
             <div class="ad-info-row">
-              <span class="ad-info-row__label">Langues</span>
+              <span class="ad-info-row__label">{{ 'appDetail.languages' | translate }}</span>
               <span class="ad-info-row__value">{{ app()!.languages!.join(', ') }}</span>
             </div>
           }
@@ -151,32 +151,32 @@
       </section>
     }
 
-    <!-- Informations commerciales -->
+    <!-- Commercial info -->
     @if (app()!.target_audience || app()!.business_sectors?.length || app()!.business_value || app()!.key_features?.length) {
       <section class="ad-section">
-        <h2>Informations commerciales</h2>
+        <h2>{{ 'appDetail.commercial' | translate }}</h2>
         <div class="ad-info-list">
           @if (app()!.target_audience) {
             <div class="ad-info-row">
-              <span class="ad-info-row__label">Public cible</span>
+              <span class="ad-info-row__label">{{ 'appDetail.target' | translate }}</span>
               <span class="ad-info-row__value">{{ app()!.target_audience }}</span>
             </div>
           }
           @if (app()!.business_sectors?.length) {
             <div class="ad-info-row">
-              <span class="ad-info-row__label">Secteurs d'activité</span>
+              <span class="ad-info-row__label">{{ 'appDetail.sectors' | translate }}</span>
               <span class="ad-info-row__value">{{ app()!.business_sectors!.join(', ') }}</span>
             </div>
           }
           @if (app()!.business_value) {
             <div class="ad-info-row">
-              <span class="ad-info-row__label">Valeur commerciale</span>
+              <span class="ad-info-row__label">{{ 'appDetail.value' | translate }}</span>
               <span class="ad-info-row__value">{{ app()!.business_value }}</span>
             </div>
           }
         </div>
         @if (app()!.key_features?.length) {
-          <p class="ad-sub-label">Fonctionnalités clés</p>
+          <p class="ad-sub-label">{{ 'appDetail.keyFeatures' | translate }}</p>
           <ul class="ad-features">
             @for (feature of app()!.key_features; track feature) {
               <li>{{ feature }}</li>
@@ -186,24 +186,24 @@
       </section>
     }
 
-    <!-- Support et documentation -->
+    <!-- Support & docs -->
     @if (app()!.support_options?.length || app()!.has_documentation !== undefined) {
       <section class="ad-section">
-        <h2>Support et documentation</h2>
+        <h2>{{ 'appDetail.supportDoc' | translate }}</h2>
         <div class="ad-info-list">
           @if (app()!.support_options?.length) {
             <div class="ad-info-row">
-              <span class="ad-info-row__label">Options de support</span>
+              <span class="ad-info-row__label">{{ 'appDetail.supportOptions' | translate }}</span>
               <span class="ad-info-row__value">{{ app()!.support_options!.join(', ') }}</span>
             </div>
           }
           <div class="ad-info-row">
-            <span class="ad-info-row__label">Documentation</span>
+            <span class="ad-info-row__label">{{ 'appDetail.documentation' | translate }}</span>
             <span class="ad-info-row__value">
               @if (app()!.has_documentation && app()!.documentation_url) {
-                <a [href]="app()!.documentation_url" target="_blank" rel="noopener" class="ad-link">Voir la doc</a>
+                <a [href]="app()!.documentation_url" target="_blank" rel="noopener" class="ad-link">{{ 'appDetail.viewDoc' | translate }}</a>
               } @else {
-                Non disponible
+                {{ 'appDetail.unavailable' | translate }}
               }
             </span>
           </div>
@@ -211,56 +211,55 @@
       </section>
     }
 
-    <!-- Informations de l'App -->
+    <!-- App info -->
     <section class="ad-section">
-      <h2>Informations de l'App</h2>
+      <h2>{{ 'appDetail.appInfo' | translate }}</h2>
       <div class="ad-info-list">
         @if (app()!.category?.name) {
           <div class="ad-info-row">
-            <span class="ad-info-row__label">Catégorie</span>
+            <span class="ad-info-row__label">{{ 'appDetail.category' | translate }}</span>
             <span class="ad-info-row__value">{{ app()!.category!.name }}</span>
           </div>
         }
         @if (app()!.subcategory) {
           <div class="ad-info-row">
-            <span class="ad-info-row__label">Sous-catégorie</span>
+            <span class="ad-info-row__label">{{ 'appDetail.subcategory' | translate }}</span>
             <span class="ad-info-row__value">{{ app()!.subcategory }}</span>
           </div>
         }
         @if (app()!.tags?.length) {
           <div class="ad-info-row">
-            <span class="ad-info-row__label">Étiquettes</span>
+            <span class="ad-info-row__label">{{ 'appDetail.tags' | translate }}</span>
             <span class="ad-info-row__value">{{ app()!.tags!.join(', ') }}</span>
           </div>
         }
         @if (app()!.publish_date) {
           <div class="ad-info-row">
-            <span class="ad-info-row__label">Date de publication</span>
+            <span class="ad-info-row__label">{{ 'appDetail.publishDate' | translate }}</span>
             <span class="ad-info-row__value">{{ app()!.publish_date }}</span>
           </div>
         }
         <div class="ad-info-row">
-          <span class="ad-info-row__label">Utilisateurs actifs</span>
+          <span class="ad-info-row__label">{{ 'appDetail.activeUsers' | translate }}</span>
           <span class="ad-info-row__value">{{ app()!.active_users ?? 0 }}</span>
         </div>
       </div>
     </section>
 
-    <!-- Contact du développeur -->
+    <!-- Developer contact -->
     @if (app()!.developer_email || app()!.developer_phone || app()!.developer_whatsapp || app()!.developer_website) {
       <section class="ad-section">
-        
         <div class="ad-contact-buttons">
           @if (app()!.developer_email) {
             <a [href]="'mailto:' + app()!.developer_email" class="ad-contact-btn ad-contact-btn--filled">
               <span class="material-symbols-outlined">mail</span>
-              Email
+              {{ 'appDetail.email' | translate }}
             </a>
           }
           @if (app()!.developer_phone) {
             <a [href]="'tel:' + app()!.developer_phone" class="ad-contact-btn ad-contact-btn--outlined">
               <span class="material-symbols-outlined">call</span>
-              Appeler
+              {{ 'appDetail.call' | translate }}
             </a>
           }
           @if (app()!.developer_whatsapp) {
@@ -272,16 +271,14 @@
           @if (app()!.developer_website) {
             <a [href]="app()!.developer_website!" target="_blank" rel="noopener" class="ad-contact-btn ad-contact-btn--outlined ad-contact-btn--block">
               <span class="material-symbols-outlined">language</span>
-              Site web
+              {{ 'appDetail.website' | translate }}
             </a>
           }
         </div>
       </section>
     }
 
-    <!-- Spacer for fixed contact bar -->
     <div class="ad-contact-spacer"></div>
-
   </div>
 
   <!-- Fixed contact bar -->
@@ -292,13 +289,13 @@
           @if (app()!.developer_email) {
             <a [href]="'mailto:' + app()!.developer_email" class="ad-contact-btn ad-contact-btn--filled">
               <span class="material-symbols-outlined">mail</span>
-              Email
+              {{ 'appDetail.email' | translate }}
             </a>
           }
           @if (app()!.developer_phone) {
             <a [href]="'tel:' + app()!.developer_phone" class="ad-contact-btn ad-contact-btn--outlined">
               <span class="material-symbols-outlined">call</span>
-              Appeler
+              {{ 'appDetail.call' | translate }}
             </a>
           }
         </div>
@@ -314,13 +311,13 @@
           @if (app()!.download_link) {
             <a [href]="app()!.download_link!" target="_blank" rel="noopener" class="ad-contact-btn ad-contact-btn--filled">
               <span class="material-symbols-outlined">download</span>
-              Télécharger
+              {{ 'appDetail.download' | translate }}
             </a>
           }
           @if (app()!.live_demo) {
             <a [href]="app()!.live_demo!" target="_blank" rel="noopener" class="ad-contact-btn ad-contact-btn--outlined">
               <span class="material-symbols-outlined">open_in_new</span>
-              Démo en ligne
+              {{ 'appDetail.demo' | translate }}
             </a>
           }
         </div>
@@ -331,19 +328,19 @@
   <!-- Lightbox -->
   @if (lightboxIndex() !== null && app()!.screenshots) {
     <div class="lightbox" (click)="closeLightbox()" (keydown)="onLightboxKeydown($event)" tabindex="0">
-      <button type="button" class="lightbox__close" (click)="closeLightbox()" aria-label="Fermer">
+      <button type="button" class="lightbox__close" (click)="closeLightbox()" [attr.aria-label]="'appDetail.screenshotAlt' | translate">
         <span class="material-symbols-outlined">close</span>
       </button>
-      <button type="button" class="lightbox__arrow lightbox__arrow--left" (click)="$event.stopPropagation(); prevScreenshot()" aria-label="Précédent">
+      <button type="button" class="lightbox__arrow lightbox__arrow--left" (click)="$event.stopPropagation(); prevScreenshot()">
         <span class="material-symbols-outlined">chevron_left</span>
       </button>
       <img
         class="lightbox__image"
         [src]="resolveAssetUrl(app()!.screenshots![lightboxIndex()!])"
-        alt="Capture d'écran"
+        [alt]="'appDetail.screenshotAlt' | translate"
         (click)="$event.stopPropagation()"
       />
-      <button type="button" class="lightbox__arrow lightbox__arrow--right" (click)="$event.stopPropagation(); nextScreenshot()" aria-label="Suivant">
+      <button type="button" class="lightbox__arrow lightbox__arrow--right" (click)="$event.stopPropagation(); nextScreenshot()">
         <span class="material-symbols-outlined">chevron_right</span>
       </button>
       <span class="lightbox__counter">{{ lightboxIndex()! + 1 }} / {{ app()!.screenshots!.length }}</span>

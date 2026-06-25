@@ -3,11 +3,13 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { UploadService } from '../../core/services/upload.service';
+import { TranslationService } from '../../core/services/translation.service';
 import { LoadingSpinner } from '../../shared/loading-spinner/loading-spinner';
+import { TranslatePipe } from '../../core/pipes/translate.pipe';
 
 @Component({
   selector: 'app-profile',
-  imports: [FormsModule, LoadingSpinner],
+  imports: [FormsModule, LoadingSpinner, TranslatePipe],
   templateUrl: './profile.html',
   styleUrl: './profile.scss',
 })
@@ -28,53 +30,33 @@ export class Profile implements OnInit {
   constructor(
     private authService: AuthService,
     private uploadService: UploadService,
-    private router: Router
+    private router: Router,
+    private ts: TranslationService
   ) {}
 
   ngOnInit(): void {
     this.authService.getProfile().subscribe({
       next: (res) => {
-        this.applyUser(res.data);
+        const u = res.data;
+        this.name = u.name;
+        this.phone = u.phone || '';
+        this.companyName = u.company_name || '';
+        this.website = u.website || '';
+        this.bio = u.bio || '';
+        this.avatarUrl = u.avatar_url || '';
         this.loading.set(false);
       },
-      error: () => {
-        const cached = this.authService.currentUser();
-        if (cached) this.applyUser(cached);
-        this.loading.set(false);
-      },
+      error: () => { this.errorMessage.set(this.ts.t('profile.errorUpdate')); this.loading.set(false); },
     });
   }
 
-  private applyUser(user: { name: string; phone: string | null; company_name: string | null; website: string | null; bio: string | null; avatar_url: string | null }): void {
-    this.name = user.name;
-    this.phone = user.phone || '';
-    this.companyName = user.company_name || '';
-    this.website = user.website || '';
-    this.bio = user.bio || '';
-    this.avatarUrl = user.avatar_url || '';
-  }
-
   onAvatarSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
+    const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-
-    const validationError = this.uploadService.validateFile(file);
-    if (validationError) {
-      this.errorMessage.set(validationError);
-      return;
-    }
-
     this.uploadingAvatar.set(true);
     this.uploadService.uploadSingle(file).subscribe({
-      next: (res) => {
-        this.avatarUrl = res.data.url;
-        this.uploadingAvatar.set(false);
-      },
-      error: () => {
-        this.errorMessage.set("L'envoi de l'avatar a échoué.");
-        this.uploadingAvatar.set(false);
-      },
+      next: (res) => { this.avatarUrl = res.data.url; this.uploadingAvatar.set(false); },
+      error: () => { this.errorMessage.set(this.ts.t('profile.errorAvatar')); this.uploadingAvatar.set(false); },
     });
   }
 
@@ -82,32 +64,17 @@ export class Profile implements OnInit {
     this.saving.set(true);
     this.errorMessage.set(null);
     this.successMessage.set(null);
-
-    this.authService
-      .updateProfile({
-        name: this.name,
-        phone: this.phone || null,
-        company_name: this.companyName || null,
-        website: this.website || null,
-        bio: this.bio || null,
-        avatar_url: this.avatarUrl || null,
-      })
-      .subscribe({
-        next: () => {
-          this.saving.set(false);
-          this.successMessage.set('Profil mis à jour.');
-        },
-        error: (err) => {
-          this.saving.set(false);
-          this.errorMessage.set(err?.error?.message || 'La mise à jour a échoué.');
-        },
-      });
+    this.authService.updateProfile({
+      name: this.name, phone: this.phone || undefined,
+      company_name: this.companyName || undefined, website: this.website || undefined,
+      bio: this.bio || undefined, avatar_url: this.avatarUrl || undefined,
+    }).subscribe({
+      next: () => { this.saving.set(false); this.successMessage.set(this.ts.t('profile.success')); },
+      error: () => { this.saving.set(false); this.errorMessage.set(this.ts.t('profile.errorUpdate')); },
+    });
   }
 
   logout(): void {
-    this.authService.logout().subscribe({
-      complete: () => this.router.navigateByUrl('/connexion'),
-      error: () => this.router.navigateByUrl('/connexion'),
-    });
+    this.authService.logout().subscribe({ next: () => this.router.navigate(['/connexion']), error: () => this.router.navigate(['/connexion']) });
   }
 }

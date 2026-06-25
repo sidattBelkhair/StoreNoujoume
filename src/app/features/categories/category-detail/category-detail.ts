@@ -4,14 +4,16 @@ import { Location } from '@angular/common';
 import { Meta, Title } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { CategoryService } from '../../../core/services/category.service';
+import { TranslationService } from '../../../core/services/translation.service';
 import { AppCategory, NoujoumApp } from '../../../core/models/app.model';
 import { AppCard } from '../../../shared/app-card/app-card';
 import { LoadingSpinner } from '../../../shared/loading-spinner/loading-spinner';
 import { EmptyState } from '../../../shared/empty-state/empty-state';
+import { TranslatePipe } from '../../../core/pipes/translate.pipe';
 
 @Component({
   selector: 'app-category-detail',
-  imports: [AppCard, LoadingSpinner, EmptyState],
+  imports: [AppCard, LoadingSpinner, EmptyState, TranslatePipe],
   templateUrl: './category-detail.html',
   styleUrl: './category-detail.scss',
 })
@@ -28,32 +30,25 @@ export class CategoryDetail implements OnInit, OnDestroy {
     private location: Location,
     private categoryService: CategoryService,
     private titleService: Title,
-    private metaService: Meta
+    private metaService: Meta,
+    private ts: TranslationService
   ) {}
 
-  goBack(): void {
-    this.location.back();
-  }
+  goBack(): void { this.location.back(); }
 
   ngOnInit(): void {
-    // Use paramMap observable so navigating /categories/1 → /categories/2
-    // reloads even if Angular reuses the component instance.
     this.routeSub = this.route.paramMap.subscribe((params) => {
       const id = Number(params.get('id'));
       if (!id) {
-        this.error.set('Catégorie introuvable.');
+        this.error.set(this.ts.t('categoryDetail.error'));
         this.loading.set(false);
         return;
       }
-
       this.loading.set(true);
       this.error.set(null);
       this.category.set(null);
       this.apps.set([]);
 
-      // GET /categories/{id} returns the category with its apps[] inline.
-      // The /apps?category_id= filter is ignored server-side, so we use
-      // this endpoint as the only reliable way to get per-category apps.
       this.categoryService.getById(id).subscribe({
         next: (res) => {
           this.category.set(res.data);
@@ -62,22 +57,18 @@ export class CategoryDetail implements OnInit, OnDestroy {
           this.updateSeoTags(res.data);
         },
         error: () => {
-          this.error.set('Impossible de charger la catégorie.');
+          this.error.set(this.ts.t('categoryDetail.error'));
           this.loading.set(false);
         },
       });
     });
   }
 
-  ngOnDestroy(): void {
-    this.routeSub?.unsubscribe();
-  }
+  ngOnDestroy(): void { this.routeSub?.unsubscribe(); }
 
-  // Référencement naturel (cahier des charges section 22).
   private updateSeoTags(category: AppCategory): void {
     const title = `${category.name} - Noujoum Store`;
-    const description = (category.description || `Applications mauritaniennes dans la catégorie ${category.name}.`).slice(0, 160);
-
+    const description = (category.description || '').slice(0, 160);
     this.titleService.setTitle(title);
     this.metaService.updateTag({ name: 'description', content: description });
     this.metaService.updateTag({ property: 'og:title', content: title });

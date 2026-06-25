@@ -1,19 +1,17 @@
-<!-- Orange top bar matching mobile: back + category name -->
 <header class="cat-topbar">
   <button class="cat-topbar__back" type="button" (click)="goBack()">
     <span class="material-symbols-outlined">arrow_back</span>
   </button>
-  <span class="cat-topbar__title">{{ category()?.name ?? 'Catégorie' }}</span>
+  <span class="cat-topbar__title">{{ category()?.name ?? ('categoryDetail.fallbackTitle' | translate) }}</span>
 </header>
 
-<!-- Apps content -->
 <section class="container category-apps">
   @if (loading()) {
     <app-loading-spinner />
   } @else if (error()) {
     <app-empty-state [message]="error()!" icon="error_outline" />
   } @else if (apps().length === 0) {
-    <app-empty-state message="Aucune application dans cette catégorie." />
+    <app-empty-state [message]="'categoryDetail.empty' | translate" />
   } @else {
     <div class="apps-grid">
       @for (app of apps(); track app.id) {
