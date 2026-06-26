@@ -5,15 +5,16 @@
     <h1>{{ 'publish.title' | translate }}</h1>
 
     <div class="publish__progress">
-      @for (step of [1, 2, 3, 4]; track step) {
+      @for (step of [1, 2, 3, 4, 5]; track step) {
         <div class="publish__step" [class.publish__step--active]="step === currentStep()" [class.publish__step--done]="step < currentStep()" (click)="goToStep(step)">
           <span class="publish__step-number">{{ step }}</span>
           <span class="publish__step-label">
             @switch (step) {
               @case (1) { {{ 'publish.stepBasic' | translate }} }
               @case (2) { {{ 'publish.stepTechnical' | translate }} }
-              @case (3) { {{ 'publish.stepPricing' | translate }} }
-              @case (4) { {{ 'publish.stepCommercial' | translate }} }
+              @case (3) { {{ 'publish.stepLinks' | translate }} }
+              @case (4) { {{ 'publish.stepPricing' | translate }} }
+              @case (5) { {{ 'publish.stepCommercial' | translate }} }
             }
           </span>
         </div>
@@ -126,6 +127,39 @@
 
       @if (currentStep() === 3) {
         <div class="publish__fields">
+          <p class="publish__step-intro">{{ 'publish.linksIntro' | translate }}</p>
+
+          <label class="publish__link-group">
+            <span class="publish__link-label">
+              <span class="material-symbols-outlined">android</span>
+              {{ 'publish.downloadLink' | translate }}
+            </span>
+            <input type="url" [(ngModel)]="downloadLink" name="downloadLink" id="downloadLink" placeholder="https://play.google.com/store/apps/details?id=..." />
+            <small class="publish__hint">{{ 'publish.downloadLinkHint' | translate }}</small>
+          </label>
+
+          <label class="publish__link-group">
+            <span class="publish__link-label">
+              <span class="material-symbols-outlined">phone_iphone</span>
+              {{ 'publish.secondaryLink' | translate }}
+            </span>
+            <input type="url" [(ngModel)]="secondaryLink" name="secondaryLink" id="secondaryLink" placeholder="https://apps.apple.com/... ou https://exemple.com/app.apk" />
+            <small class="publish__hint">{{ 'publish.secondaryLinkHint' | translate }}</small>
+          </label>
+
+          <label class="publish__link-group">
+            <span class="publish__link-label">
+              <span class="material-symbols-outlined">language</span>
+              {{ 'publish.website' | translate }}
+            </span>
+            <input type="url" [(ngModel)]="developerWebsite" name="developerWebsite" id="developerWebsite" placeholder="https://..." />
+            <small class="publish__hint">{{ 'publish.websiteHint' | translate }}</small>
+          </label>
+        </div>
+      }
+
+      @if (currentStep() === 4) {
+        <div class="publish__fields">
           <label>
             {{ 'publish.pricingModel' | translate }}
             <select [(ngModel)]="pricingModel" name="pricingModel" required>
@@ -161,7 +195,7 @@
         </div>
       }
 
-      @if (currentStep() === 4) {
+      @if (currentStep() === 5) {
         <div class="publish__fields">
           <label>
             {{ 'publish.businessValue' | translate }}

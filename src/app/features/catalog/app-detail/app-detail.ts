@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, signal, computed, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { Meta, Title } from '@angular/platform-browser';
@@ -9,6 +9,15 @@ import { LoadingSpinner } from '../../../shared/loading-spinner/loading-spinner'
 import { EmptyState } from '../../../shared/empty-state/empty-state';
 import { TranslatePipe } from '../../../core/pipes/translate.pipe';
 import { resolveAssetUrl } from '../../../core/utils/asset-url.util';
+
+export type StoreLinkType = 'google-play' | 'app-store' | 'apk' | 'website';
+
+export interface StoreLink {
+  type: StoreLinkType;
+  url: string;
+  icon: string;
+  label: string;
+}
 
 @Component({
   selector: 'app-app-detail',
@@ -25,6 +34,26 @@ export class AppDetail implements OnInit {
   readonly copied = signal(false);
   readonly lightboxIndex = signal<number | null>(null);
   readonly favorited = signal(false);
+
+  // Le backend n'expose qu'un download_link / live_demo / developer_website
+  // génériques (pas de champs séparés google_play/app_store/apk - vérifié
+  // par curl sur GET /api/apps/{id}). On déduit donc le type de lien à
+  // partir de l'URL elle-même, côté front uniquement.
+  readonly storeLinks = computed<StoreLink[]>(() => {
+    const app = this.app();
+    if (!app) return [];
+    const candidates = [app.download_link, app.live_demo, app.developer_website];
+    const seen = new Set<StoreLinkType>();
+    const links: StoreLink[] = [];
+    for (const url of candidates) {
+      if (!url) continue;
+      const type = this.classifyLink(url);
+      if (seen.has(type)) continue;
+      seen.add(type);
+      links.push({ type, url, icon: this.iconForLinkType(type), label: this.labelForLinkType(type) });
+    }
+    return links;
+  });
 
   @ViewChild('screenshotsRef') screenshotsRef!: ElementRef<HTMLElement>;
 
@@ -143,5 +172,33 @@ export class AppDetail implements OnInit {
   whatsappHref(number: string): string {
     const clean = number.replace(/\D/g, '');
     return `https://wa.me/${clean}`;
+  }
+
+  private classifyLink(url: string): StoreLinkType {
+    const u = url.toLowerCase();
+    if (u.includes('play.google.com')) return 'google-play';
+    if (u.includes('apps.apple.com') || u.includes('itunes.apple.com')) return 'app-store';
+    if (/\.apk(\?|#|$)/.test(u)) return 'apk';
+    return 'website';
+  }
+
+  private iconForLinkType(type: StoreLinkType): string {
+    const map: Record<StoreLinkType, string> = {
+      'google-play': 'android',
+      'app-store': 'phone_iphone',
+      apk: 'download',
+      website: 'language',
+    };
+    return map[type];
+  }
+
+  private labelForLinkType(type: StoreLinkType): string {
+    const map: Record<StoreLinkType, string> = {
+      'google-play': this.ts.t('appDetail.googlePlay'),
+      'app-store': this.ts.t('appDetail.appStore'),
+      apk: this.ts.t('appDetail.apk'),
+      website: this.ts.t('appDetail.website'),
+    };
+    return map[type];
   }
 }

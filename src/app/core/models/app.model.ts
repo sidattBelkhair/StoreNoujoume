@@ -110,6 +110,7 @@ export interface AppCreatePayload {
   icon_url?: string;
   screenshots?: string[];
   download_link?: string;
+  live_demo?: string;
   developer_website?: string;
   app_type?: string;
   supported_platforms?: SupportedPlatform[];

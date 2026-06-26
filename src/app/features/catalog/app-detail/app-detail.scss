@@ -166,6 +166,37 @@
   }
 }
 
+// ---- Store / install links (Google Play, App Store, APK, Site web) ----
+.ad-store-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0 16px 16px;
+}
+
+.ad-store-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px;
+  border-radius: 30px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+  color: $color-white;
+  background-color: $color-text;
+  transition: opacity 0.15s;
+
+  &:active { opacity: 0.8; }
+
+  .material-symbols-outlined { font-size: 18px; }
+
+  &--google-play { background-color: $color-secondary; }
+  &--app-store { background-color: $color-text; }
+  &--apk { background-color: $color-primary; color: $color-text; }
+  &--website { background-color: $color-white; color: $color-text; border: 2px solid $color-cream; }
+}
+
 // ---- Badges (sponsorisé / vérifiée) ----
 .ad-badge {
   display: inline-flex;

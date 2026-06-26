@@ -75,6 +75,24 @@
       </div>
     </div>
 
+    <!-- Store / install links (Google Play, App Store, APK, Site web) -->
+    @if (storeLinks().length) {
+      <div class="ad-store-links">
+        @for (link of storeLinks(); track link.type) {
+          <a
+            [href]="link.url"
+            target="_blank"
+            rel="noopener"
+            class="ad-store-link"
+            [class]="'ad-store-link--' + link.type"
+          >
+            <span class="material-symbols-outlined">{{ link.icon }}</span>
+            <span>{{ link.label }}</span>
+          </a>
+        }
+      </div>
+    }
+
     <!-- Screenshots carousel -->
     @if (app()!.screenshots?.length) {
       <section class="ad-section">

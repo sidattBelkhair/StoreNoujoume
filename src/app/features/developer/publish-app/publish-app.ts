@@ -46,7 +46,7 @@ export class PublishApp implements OnInit {
   readonly supportOptionsList = SUPPORT_OPTIONS;
 
   readonly currentStep = signal(1);
-  readonly totalSteps = 4;
+  readonly totalSteps = 5;
   readonly categories = signal<AppCategory[]>([]);
   readonly loading = signal(false);
   readonly loadingApp = signal(false);
@@ -72,6 +72,9 @@ export class PublishApp implements OnInit {
   currentVersion = '1.0.0';
   technicalRequirements = '';
   languagesInput = '';
+  downloadLink = '';
+  secondaryLink = '';
+  developerWebsite = '';
 
   pricingModel: AppPricingModel | '' = '';
   licenseType: AppLicenseType | '' = '';
@@ -120,6 +123,9 @@ export class PublishApp implements OnInit {
           this.currentVersion = app.current_version || '1.0.0';
           this.technicalRequirements = app.technical_requirements || '';
           this.languagesInput = (app.languages || []).join(', ');
+          this.downloadLink = app.download_link || '';
+          this.secondaryLink = app.live_demo || '';
+          this.developerWebsite = app.developer_website || '';
           this.pricingModel = app.pricing_model || '';
           this.licenseType = app.license_type || '';
           this.pricing = app.pricing || '';
@@ -202,14 +208,14 @@ export class PublishApp implements OnInit {
     if (step === 2 && (!this.appType || !this.languagesInput.trim())) {
       this.stepError.set(required); return false;
     }
-    if (step === 3 && (!this.pricingModel || !this.licenseType || !this.pricing)) {
+    if (step === 4 && (!this.pricingModel || !this.licenseType || !this.pricing)) {
       this.stepError.set(required); return false;
     }
     return true;
   }
 
   submit(): void {
-    if (!this.validateStep(1) || !this.validateStep(2) || !this.validateStep(3)) {
+    if (!this.validateStep(1) || !this.validateStep(2) || !this.validateStep(4)) {
       this.currentStep.set(1); return;
     }
     const payload: AppCreatePayload = {
@@ -221,6 +227,8 @@ export class PublishApp implements OnInit {
       app_type: this.appType || undefined,
       supported_platforms: this.supportedPlatforms.length ? this.supportedPlatforms : undefined,
       current_version: this.currentVersion || undefined, languages: this.splitCommas(this.languagesInput),
+      download_link: this.downloadLink || undefined, live_demo: this.secondaryLink || undefined,
+      developer_website: this.developerWebsite || undefined,
       pricing_model: (this.pricingModel as AppPricingModel) || undefined,
       license_type: (this.licenseType as AppLicenseType) || undefined,
       pricing: this.pricing || undefined, has_free_trial: this.hasFreeTrial,
@@ -234,8 +242,21 @@ export class PublishApp implements OnInit {
     const request = this.editId ? this.appService.update(this.editId, payload) : this.appService.create(payload);
     request.subscribe({
       next: () => { this.loading.set(false); this.router.navigate(['/tableau-de-bord']); },
-      error: (err) => { this.loading.set(false); this.errorMessage.set(err?.error?.message || this.ts.t('publish.errorSubmit')); },
+      error: (err) => { this.loading.set(false); this.errorMessage.set(this.formatSubmitError(err)); },
     });
+  }
+
+  // Laravel renvoie un 422 avec { message, errors: { champ: [msg, ...] } } —
+  // err.error.message seul ("Validation errors", "The given data was invalid.")
+  // ne dit pas QUEL champ est invalide, donc on déplie errors pour l'afficher.
+  private formatSubmitError(err: { error?: { message?: string; errors?: Record<string, string[]> } }): string {
+    const errors = err?.error?.errors;
+    if (errors && Object.keys(errors).length) {
+      return Object.entries(errors)
+        .map(([field, messages]) => `${field} : ${messages.join(', ')}`)
+        .join(' — ');
+    }
+    return err?.error?.message || this.ts.t('publish.errorSubmit');
   }
 
   private splitLines(value: string): string[] | undefined {
